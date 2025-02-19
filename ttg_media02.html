@@ -38,35 +38,35 @@
 
         #ghost {
             position: absolute;
-            top: 70%;  /* Adjust as needed */
-            left: 19%; /* Adjust as needed */
-            width: 250px; /* Set ghost size */
+            top: 70vh;  /* Relative to viewport height */
+            left: 25vw; /* Relative to viewport width */
+            width: 16vw; /* Adjust proportionally */
             opacity: 0;
-            pointer-events: none; /* Prevent interaction */
-            z-index: -1; /* Behind gradient and media bar */
-            transition: opacity 0.2s ease-in-out; /* Smooth fade */
+            pointer-events: none;
+            z-index: -1;
+            transition: opacity 0.2s ease-in-out;
         }
 
-        #ghost_02{
+        #ghost_02 {
             position: absolute;
-            top: 62%;  /* Adjust as needed */
-            right: 27%; /* Adjust as needed */
-            width: 350px; /* Set ghost size */
+            top: 58vh;
+            right: 25vw;
+            width: 28vw;
             opacity: 0;
-            pointer-events: none; /* Prevent interaction */
-            z-index: -1; /* Behind gradient and media bar */
-            transition: opacity 0.2s ease-in-out; /* Smooth fade */
+            pointer-events: none;
+            z-index: -1;
+            transition: opacity 0.2s ease-in-out;
         }
 
-        #ghost_03{
+        #ghost_03 {
             position: absolute;
-            top: 70%;  /* Adjust as needed */
-            right: 46%; /* Adjust as needed */
-            width: 175px; /* Set ghost size */
+            top: 75vh;
+            right: 47.5vw;
+            width: 8vw;
             opacity: 0;
-            pointer-events: none; /* Prevent interaction */
-            z-index: -1; /* Behind gradient and media bar */
-            transition: opacity 0.2s ease-in-out; /* Smooth fade */
+            pointer-events: none;
+            z-index: -1;
+            transition: opacity 0.2s ease-in-out;
         }
 
         @keyframes glitch-flicker {
@@ -222,9 +222,9 @@
     <div class="page-overlay"></div>
 
     <!-- Ghost Image (Intermittent Glitch Effect) -->
-    <img id="ghost" src="images/ghost 02c.png" alt="Ghostly figure">
-    <img id="ghost_02" src="images/ghost 02d.png" alt="Ghostly figure">
-    <img id="ghost_03" src="images/ghost 02c.png" alt="Ghostly figure">
+    <img id="ghost" src="images/ghost 02cb.png" alt="Ghostly figure">
+    <img id="ghost_02" src="images/ghost 02da.png" alt="Ghostly figure">
+    <img id="ghost_03" src="images/ghost 02cb.png" alt="Ghostly figure">
 
     <div class="flashlight"></div>
 
@@ -324,7 +324,7 @@ function showGhost(ghostId) {
             // Call function again with a random delay (15s - 45s)
             let nextAppearance = Math.random() * (45000 - 15000) + 15000;
             setTimeout(() => showGhost(ghostId), nextAppearance);
-        }, 200); // Hold final flicker for 0.2s before fully disappearing
+        }, 200); // Hold final flicker for 0.4s before fully disappearing
     }, visibleDuration);
 }
 
