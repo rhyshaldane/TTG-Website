@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Through the Gloom</title>
+    
+    <!-- Google Font link for Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@100;400&display=swap" rel="stylesheet">
+
+    <style>
+        /* Font setup for the band name */
+        @font-face {
+            font-family: 'VoidThin';
+            src: url('fonts/Void Thin.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'VoidRegular';
+            src: url('fonts/Void Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            background: url('images/forest01b.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: black;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            cursor: none; /* Hide the default cursor */
+        }
+
+        /* Ghost Image */
+        #ghost {
+            position: absolute;
+            top: 75%;  /* Adjust as needed */
+            left: 33%; /* Adjust as needed */
+            width: 200px; /* Set ghost size */
+            opacity: 0.8; /* Semi-transparent */
+            pointer-events: none; /* Prevent interaction */
+            z-index: -1; /* Behind gradient and media bar */
+        }
+
+        /* Overlay for the flashlight effect */
+        .page-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 10%, rgba(0, 0, 0, 0.95) 90%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Band name text styling */
+        .band-name {
+            position: absolute;
+            top: 27.5%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'VoidRegular', sans-serif;
+            font-size: 46px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            opacity: 0.8; /* Start fully visible */
+            z-index: 3;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.3));
+            -webkit-background-clip: text;
+            color: rgba(255, 255, 255, 0.2); /* Instead of transparent, use a faint white */
+            transition: opacity 0.1s ease-out;
+            white-space: nowrap;
+        }
+
+        /* Scrolling media picker bar */
+        .media-bar {
+            position: absolute;
+            top: calc(30% + 12.5%); /* Position it below the band name (30% top + 10% of the total height) */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%; /* Adjust width to fit the layout */
+            padding: 10px;
+            display: flex;
+            overflow-x: auto;
+            background: rgba(0, 0, 0, 0.33); /* Smoky, wispy background with low opacity */
+            border-radius: 20px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        /* Media links */
+        .media-link {
+            text-decoration: none;
+            color: white;
+            font-family: 'VoidThin', sans-serif;
+            font-size: 16px;
+            letter-spacing: 2px;
+            margin: 0 15px;
+            opacity: 0.6; /* Default opacity for links */
+            transition: opacity 0.3s ease;
+        }
+
+        .media-link:hover {
+            opacity: 1; /* Full opacity on hover */
+        }
+
+        /* Text above the players */
+        .player-title {
+            font-family: 'VoidThin', sans-serif;
+            font-size: 18px;
+            color: white;
+            opacity: 0.7;
+            margin-bottom: 10px;
+            transition: opacity 0.3s ease;
+        }
+
+        .player-title:hover {
+            opacity: 1; /* On hover, show full opacity */
+        }
+
+        /* Bottom navigation bar styling */
+        .bottom-nav {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            opacity: 0.33; /* Default opacity */
+            font-size: 12px;
+            z-index: 3;
+            font-family: 'Merriweather', serif; 
+            letter-spacing: 2px;
+            color: white;
+        }
+
+        /* Styling for bottom navigation links */
+        .bottom-nav a {
+            text-decoration: none;
+            color: white;
+            margin: 0 10px;
+            font-weight: lighter;
+        }
+
+        /* Flashlight effect styling */
+        .flashlight {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 10%, rgba(0,0,0,0.9) 90%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+            z-index: 4;
+            border-radius: 50%;
+            animation: flicker 5s infinite ease-in-out, drift 15s infinite ease-in-out alternate;
+        }
+
+        /* Animation for the flashlight flickering effect */
+        @keyframes flicker {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            20% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.02); }
+            40% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.98); }
+            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.01); }
+            80% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.03); }b
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Animation for flashlight drifting effect */
+        @keyframes drift {
+            0% { transform: translate(-50%, -50%) translateX(0px) translateY(0px); }
+            50% { transform: translate(-50%, -50%) translateX(5px) translateY(-3px); }
+            100% { transform: translate(-50%, -50%) translateX(-5px) translateY(3px); }
+        }
+
+        
+
+    </style>
+    
+</head>
+<body>
+    <div class="page-overlay"></div>
+
+    <!-- Ghost Image (Intermittent Glitch Effect) -->
+    <img id="ghost" src="images/ghost 02.png" alt="Ghostly figure">
+
+    <div class="flashlight"></div>
+
+    <!-- Container for band name and media bar -->
+    <div class="container">
+        <div class="band-name">Through the Gloom</div>
+        
+        <!-- Scrolling media bar with links -->
+        <div class="media-bar">
+            <div class="media-link">
+                <a href="https://youtu.be/J61zWeN2Lk4?si=3GneWAXn34KRM58v" class="media-link">Videos</a>
+            </div>    
+
+            <div class="media-link">
+                <a href="#photos" class="media-link">Photos</a>
+            </div>  
+
+            <!-- Reviews -->
+            <div class="media-link">
+                <a href="https://onyxmusicreviews.com/2024/08/16/through-the-gloom-dark-patterns/" class="media-link">Words</a>
+            </div> 
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div>
+            <a href="https://utopianmechanics.bandcamp.com/album/dark-patterns" target="_blank">Bandcamp</a> |
+            <a href="https://open.spotify.com/artist/76uTSrHT53n5oSbYtJ4rRp?si=9ErcgjoERiupjKQMsDtgyg" target="_blank">Spotify</a> |
+            <a href="https://music.apple.com/us/artist/through-the-gloom/1691335112" target="_blank">iTunes</a>
+                 <!-- need to add Pandora, SoundCloud, Amazon Music, Deezer, Tidal, and more -->
+        </div> 
+
+        <div>
+            <a href="https://www.instagram.com/through.the.gloom/?hl=en">Instagram</a> |
+            <a href="https://www.facebook.com/throughthegloom/">Facebook</a> |
+            <a href="https://www.instagram.com/through.the.gloom/?hl=en">TikTok</a> 
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let bandName = document.querySelector(".band-name");
+            let text = bandName.textContent;
+            bandName.innerHTML = ""; // Clear existing text
+    
+            // Wrap each letter in a <span> so opacity can be controlled individually
+            text.split("").forEach(char => {
+                let span = document.createElement("span");
+                span.textContent = char === " " ? "\u00A0" : char; // Preserve spaces
+                span.style.display = "inline-block"; // Keeps spacing correct
+                span.style.transition = "opacity 0.1s ease-out"; // Smooth effect
+                span.style.opacity = "0.1"; // Default low opacity
+                span.style.color = "white"; // Ensure text is actually visible
+                bandName.appendChild(span);
+            });
+        });
+    
+        document.addEventListener("mousemove", function(e) {
+            let flashlight = document.querySelector(".flashlight");
+            flashlight.style.left = e.clientX + "px";
+            flashlight.style.top = e.clientY + "px";
+            
+            let letters = document.querySelectorAll(".band-name span");
+            let maxDistance = 300; // Distance at which the effect applies
+    
+            letters.forEach(letter => {
+                let rect = letter.getBoundingClientRect();
+                let letterCenterX = rect.left + rect.width / 2;
+                let letterCenterY = rect.top + rect.height / 2;
+    
+                let distance = Math.hypot(e.clientX - letterCenterX, e.clientY - letterCenterY);
+                let opacityFactor = 1 - Math.min(distance / maxDistance, 1); // Normalize distance
+    
+                letter.style.opacity = `${0.1 + (0.9 * opacityFactor)}`; // Min 0.2, Max 1
+            });
+        });
+    </script>    
+   
+</body>
+</html>
