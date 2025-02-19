@@ -41,7 +41,7 @@
             top: 70%;  /* Adjust as needed */
             left: 27%; /* Adjust as needed */
             width: 250px; /* Set ghost size */
-            opacity: 1;
+            opacity: 0;
             pointer-events: none; /* Prevent interaction */
             z-index: -1; /* Behind gradient and media bar */
             transition: opacity 0.2s ease-in-out; /* Smooth fade */
@@ -52,7 +52,7 @@
             top: 62%;  /* Adjust as needed */
             left: 46%; /* Adjust as needed */
             width: 350px; /* Set ghost size */
-            opacity: 1;
+            opacity: 0;
             pointer-events: none; /* Prevent interaction */
             z-index: -1; /* Behind gradient and media bar */
             transition: opacity 0.2s ease-in-out; /* Smooth fade */
@@ -299,7 +299,7 @@ function showGhost(ghostId) {
     let visibleDuration = Math.random() * (1500 - 500) + 500; 
 
     // Add glitch flicker effect
-    ghost.style.animation = "glitch-flicker 0.15s infinite alternate, glitch-slices 0.12s infinite alternate";
+    ghost.style.animation = "glitch-flicker 0.2s infinite alternate, glitch-slices 0.2s infinite alternate";
     ghost.style.opacity = "0.8"; // Increased visibility
 
     // Hide ghost after the random duration
