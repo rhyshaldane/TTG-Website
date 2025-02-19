@@ -39,9 +39,9 @@
         #ghost {
             position: absolute;
             top: 70%;  /* Adjust as needed */
-            left: 27%; /* Adjust as needed */
+            left: 19%; /* Adjust as needed */
             width: 250px; /* Set ghost size */
-            opacity: 0;
+            opacity: 1;
             pointer-events: none; /* Prevent interaction */
             z-index: -1; /* Behind gradient and media bar */
             transition: opacity 0.2s ease-in-out; /* Smooth fade */
@@ -50,9 +50,20 @@
         #ghost_02{
             position: absolute;
             top: 62%;  /* Adjust as needed */
-            left: 46%; /* Adjust as needed */
+            right: 19%; /* Adjust as needed */
             width: 350px; /* Set ghost size */
-            opacity: 0;
+            opacity: 1;
+            pointer-events: none; /* Prevent interaction */
+            z-index: -1; /* Behind gradient and media bar */
+            transition: opacity 0.2s ease-in-out; /* Smooth fade */
+        }
+
+        #ghost_03{
+            position: absolute;
+            top: 62%;  /* Adjust as needed */
+            right: 19%; /* Adjust as needed */
+            width: 350px; /* Set ghost size */
+            opacity: 1;
             pointer-events: none; /* Prevent interaction */
             z-index: -1; /* Behind gradient and media bar */
             transition: opacity 0.2s ease-in-out; /* Smooth fade */
@@ -299,19 +310,23 @@ function showGhost(ghostId) {
     let visibleDuration = Math.random() * (1500 - 500) + 500; 
 
     // Add glitch flicker effect
-    ghost.style.animation = "glitch-flicker 0.2s infinite alternate, glitch-slices 0.2s infinite alternate";
-    ghost.style.opacity = "0.8"; // Increased visibility
+    ghost.style.animation = "glitch-flicker 0.15s infinite alternate, glitch-slices 0.12s infinite alternate";
+    ghost.style.opacity = "0.8"; // Visibility level
 
-    // Hide ghost after the random duration
+    // Hide ghost after the random duration but with a final longer flicker
     setTimeout(() => {
-        ghost.style.opacity = "0";
-        ghost.style.animation = ""; // Remove glitch animation when hidden
+        ghost.style.opacity = "0.6"; // Hold final flicker
+        setTimeout(() => {
+            ghost.style.opacity = "0";
+            ghost.style.animation = ""; // Remove glitch animation when hidden
 
-        // Call function again with a random delay (15s - 45s)
-        let nextAppearance = Math.random() * (45000 - 15000) + 15000;
-        setTimeout(() => showGhost(ghostId), nextAppearance);
+            // Call function again with a random delay (15s - 45s)
+            let nextAppearance = Math.random() * (45000 - 15000) + 15000;
+            setTimeout(() => showGhost(ghostId), nextAppearance);
+        }, 200); // Hold final flicker for 0.2s before fully disappearing
     }, visibleDuration);
 }
+
 
 // Start both ghosts at different random times
 setTimeout(() => showGhost("ghost"), Math.random() * (30000 - 10000) + 10000);
