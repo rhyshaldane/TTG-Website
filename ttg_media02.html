@@ -36,15 +36,43 @@
             cursor: none; /* Hide the default cursor */
         }
 
-        /* Ghost Image */
         #ghost {
             position: absolute;
-            top: 75%;  /* Adjust as needed */
-            left: 33%; /* Adjust as needed */
-            width: 200px; /* Set ghost size */
-            opacity: 0.8; /* Semi-transparent */
+            top: 70%;  /* Adjust as needed */
+            left: 27%; /* Adjust as needed */
+            width: 250px; /* Set ghost size */
+            opacity: 1;
             pointer-events: none; /* Prevent interaction */
             z-index: -1; /* Behind gradient and media bar */
+            transition: opacity 0.2s ease-in-out; /* Smooth fade */
+        }
+
+        #ghost_02{
+            position: absolute;
+            top: 62%;  /* Adjust as needed */
+            left: 46%; /* Adjust as needed */
+            width: 350px; /* Set ghost size */
+            opacity: 1;
+            pointer-events: none; /* Prevent interaction */
+            z-index: -1; /* Behind gradient and media bar */
+            transition: opacity 0.2s ease-in-out; /* Smooth fade */
+        }
+
+        @keyframes glitch-flicker {
+            0% { opacity: 0.3; filter: hue-rotate(20deg) contrast(1.2); }
+            20% { opacity: 0.5; filter: contrast(1.5) saturate(1.3) brightness(1.1); }
+            40% { opacity: 0.2; filter: hue-rotate(-10deg) blur(1px); }
+            60% { opacity: 0.4; filter: brightness(0.9); }
+            80% { opacity: 0.3; filter: contrast(1.3); }
+            100% { opacity: 0.2; filter: none; }
+        }
+
+        @keyframes glitch-slices {
+            0% { clip-path: inset(0% 0 0 0); }
+            25% { clip-path: inset(10% 0 30% 0); }
+            50% { clip-path: inset(25% 0 50% 0); }
+            75% { clip-path: inset(40% 0 60% 0); }
+            100% { clip-path: inset(0% 0 0 0); }
         }
 
         /* Overlay for the flashlight effect */
@@ -149,7 +177,7 @@
         .flashlight {
             position: absolute;
             width: 100px;
-            height: 100px;
+            height: 200px;
             background: radial-gradient(circle, rgba(255,255,255,0.15) 10%, rgba(0,0,0,0.9) 90%);
             pointer-events: none;
             transform: translate(-50%, -50%);
@@ -176,8 +204,6 @@
             100% { transform: translate(-50%, -50%) translateX(-5px) translateY(3px); }
         }
 
-        
-
     </style>
     
 </head>
@@ -185,7 +211,8 @@
     <div class="page-overlay"></div>
 
     <!-- Ghost Image (Intermittent Glitch Effect) -->
-    <img id="ghost" src="images/ghost 02.png" alt="Ghostly figure">
+    <img id="ghost" src="images/ghost 02c.png" alt="Ghostly figure">
+    <img id="ghost_02" src="images/ghost 02d.png" alt="Ghostly figure">
 
     <div class="flashlight"></div>
 
@@ -263,6 +290,34 @@
                 letter.style.opacity = `${0.1 + (0.9 * opacityFactor)}`; // Min 0.2, Max 1
             });
         });
+
+        // JavaScript Random Ghost Visibility
+function showGhost(ghostId) {
+    let ghost = document.getElementById(ghostId);
+
+    // Random duration for ghost to be visible (0.5s - 1.5s)
+    let visibleDuration = Math.random() * (1500 - 500) + 500; 
+
+    // Add glitch flicker effect
+    ghost.style.animation = "glitch-flicker 0.15s infinite alternate, glitch-slices 0.12s infinite alternate";
+    ghost.style.opacity = "0.8"; // Increased visibility
+
+    // Hide ghost after the random duration
+    setTimeout(() => {
+        ghost.style.opacity = "0";
+        ghost.style.animation = ""; // Remove glitch animation when hidden
+
+        // Call function again with a random delay (15s - 45s)
+        let nextAppearance = Math.random() * (45000 - 15000) + 15000;
+        setTimeout(() => showGhost(ghostId), nextAppearance);
+    }, visibleDuration);
+}
+
+// Start both ghosts at different random times
+setTimeout(() => showGhost("ghost"), Math.random() * (30000 - 10000) + 10000);
+setTimeout(() => showGhost("ghost_02"), Math.random() * (35000 - 12000) + 12000);
+
+
     </script>    
    
 </body>
