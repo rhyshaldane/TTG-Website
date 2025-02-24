@@ -334,10 +334,6 @@
     /* =========================
        End Modal & Panel Styles
        ========================= */
-
-    /* ======= 
-       NOTE: Adjust the glitch effect below if you prefer a stronger or different animation.
-       ======= */
   </style>
   
 </head>
@@ -407,8 +403,6 @@
   <div id="lightbox" class="lightbox">
     <div class="lightbox-content">
       <span class="close" id="closeLightbox">&times;</span>
-      <!-- Replace the src with your hosted image URL.
-           Consider using a dedicated image hosting service (e.g., Imgur, Flickr, GitHub Pages) rather than Google Drive -->
       <img src="images/sample_photo.jpg" alt="Echoes Photo">
     </div>
   </div>
@@ -416,12 +410,7 @@
   <!-- Sliding Side Panel for "Whispers" -->
   <div id="whispersPanel" class="side-panel">
     <span class="close-panel" id="closeWhispersPanel">&times;</span>
-    <!-- The iframe loads the external review/blog. If the page does not allow embedding,
-         you can display a fallback message or provide a link to open in a new tab. -->
     <iframe id="whispersFrame" src="https://onyxmusicreviews.com/2024/08/16/through-the-gloom-dark-patterns/"></iframe>
-    <!-- Uncomment below and adjust if you want to show fallback content:
-    <div class="iframe-fallback">Content unavailable. <a href="https://onyxmusicreviews.com/2024/08/16/through-the-gloom-dark-patterns/" target="_blank">Open in new tab</a></div>
-    -->
   </div>
 
   <!-- =========================
@@ -453,7 +442,7 @@
           span.textContent = char === " " ? "\u00A0" : char;
           span.style.display = "inline-block";
           span.style.transition = "opacity 0.1s ease-out";
-          span.style.opacity = "0.4"; // default starting opacity changed to 0.4
+          span.style.opacity = "0.4"; // default starting opacity
           span.style.color = "white";
           link.appendChild(span);
         });
@@ -487,7 +476,6 @@
         let letterCenterY = rect.top + rect.height / 2;
         let distance = Math.hypot(e.clientX - letterCenterX, e.clientY - letterCenterY);
         let opacityFactor = 1 - Math.min(distance / maxDistance, 1);
-        // Base opacity is 0.4, increasing up to 1 when very close (0.4 + 0.6 = 1)
         letter.style.opacity = `${0.4 + (0.6 * opacityFactor)}`;
       });
     });
@@ -546,6 +534,28 @@
     // =========================
     // End Modal & Panel JavaScript
     // =========================
+  
+    // Ghost flicker functionality
+    function showGhost(ghostId) {
+      let ghost = document.getElementById(ghostId);
+      let visibleDuration = Math.random() * (1500 - 500) + 500; // visible for 500ms to 1500ms
+      ghost.style.animation = "glitch-flicker 0.15s infinite alternate, glitch-slices 0.12s infinite alternate";
+      ghost.style.opacity = "0.8";
+      setTimeout(() => {
+        ghost.style.opacity = "0.6";
+        setTimeout(() => {
+          ghost.style.opacity = "0";
+          ghost.style.animation = "";
+          let nextAppearance = Math.random() * (180000 - 60000) + 60000; // next appearance between 60s and 180s
+          setTimeout(() => showGhost(ghostId), nextAppearance);
+        }, 200);
+      }, visibleDuration);
+    }
+  
+    // Initiate ghost effects with random initial delays
+    setTimeout(() => showGhost("ghost"), Math.random() * (30000 - 10000) + 10000);
+    setTimeout(() => showGhost("ghost_02"), Math.random() * (35000 - 12000) + 12000);
+    setTimeout(() => showGhost("ghost_03"), Math.random() * (90000 - 4000) + 40000);
   </script>
   
 </body>
