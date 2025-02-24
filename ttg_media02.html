@@ -50,7 +50,7 @@
         #ghost_02 {
             position: absolute;
             top: 58vh;
-            right: 25vw;
+            right: 23vw;
             width: 28vw;
             opacity: 0;
             pointer-events: none;
@@ -60,7 +60,7 @@
 
         #ghost_03 {
             position: absolute;
-            top: 75vh;
+            top: 81vh;
             right: 47.5vw;
             width: 8vw;
             opacity: 0;
@@ -99,7 +99,7 @@
         /* Band name text styling */
         .band-name {
             position: absolute;
-            top: 27.5%;
+            top: 22%;
             left: 50%;
             transform: translateX(-50%);
             font-family: 'VoidRegular', sans-serif;
@@ -118,13 +118,16 @@
         /* Scrolling media picker bar */
         .media-bar {
             position: absolute;
-            top: calc(30% + 12.5%); /* Position it below the band name (30% top + 10% of the total height) */
+            top: calc(30% + 18%); /* Position it below the band name (30% top + 10% of the total height) */
             left: 50%;
             transform: translateX(-50%);
             width: 80%; /* Adjust width to fit the layout */
             padding: 10px;
             display: flex;
-            overflow-x: auto;
+            /* overflow-x: auto; */
+            justify-content: center;
+            align-items: center;
+            gap: 30px; /* spacingbetween links */
             background: rgba(0, 0, 0, 0.33); /* Smoky, wispy background with low opacity */
             border-radius: 20px;
             z-index: 2;
@@ -138,9 +141,17 @@
             font-family: 'VoidThin', sans-serif;
             font-size: 16px;
             letter-spacing: 2px;
-            margin: 0 15px;
+            /* margin: 0 15px; */
             opacity: 0.6; /* Default opacity for links */
             transition: opacity 0.3s ease;
+            flex-shrink: 0; /*Prevents links from shrinking if theres not enough space */
+        }
+
+        /*Ensures links are properly centred */
+        .media-link a {
+            display: inline-block;
+            text-align: center;
+            padding: 5px 10px;
         }
 
         .media-link:hover {
@@ -187,8 +198,8 @@
         /* Flashlight effect styling */
         .flashlight {
             position: absolute;
-            width: 100px;
-            height: 200px;
+            width: 5vw;
+            height: 5vw;
             background: radial-gradient(circle, rgba(255,255,255,0.15) 10%, rgba(0,0,0,0.9) 90%);
             pointer-events: none;
             transform: translate(-50%, -50%);
@@ -215,6 +226,61 @@
             100% { transform: translate(-50%, -50%) translateX(-5px) translateY(3px); }
         }
 
+        @keyframes vhs-glitch {
+            0% { transform: translateX(0); filter: hue-rotate(0deg); }
+            20% { transform: translateX(-2px); filter: hue-rotate(10deg); }
+            40% { transform: translateX(2px); filter: contrast(1.2); }
+            60% { transform: translateX(-1px); filter: hue-rotate(-5deg); }
+            80% { transform: translateX(1px); filter: contrast(1.1); }
+            100% { transform: translateX(0); filter: hue-rotate(0deg); }
+        }
+
+        @keyframes text-glitch {
+            0%, 100% { opacity: 1; }
+            30% { opacity: 0.5; transform: skewX(10deg); }
+            60% { opacity: 0.3; transform: skewX(-10deg); }
+        }
+
+        .visions-link {
+            position: relative;
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            font-family: 'VoidThin', sans-serif;
+            font-size: 16px;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .visions-link:hover {
+            animation: vhs-glitch 0.2s infinite alternate ease-in-out;
+            opacity: 1;
+        }
+
+        .visions-link:hover::after {
+            content: attr(data-glitch);
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: rgba(255, 255, 255, 0.4);
+            animation: text-glitch 0.4s infinite alternate ease-in-out;
+        }
+
+        .static-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('images/vhs_static(1).gif'); /* Use a grainy static gif */
+            background-size: cover;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 9999;
+        }
+
     </style>
     
 </head>
@@ -234,18 +300,27 @@
         
         <!-- Scrolling media bar with links -->
         <div class="media-bar">
+
+            <!-- Videos -->
             <div class="media-link">
-                <a href="https://youtu.be/J61zWeN2Lk4?si=3GneWAXn34KRM58v" class="media-link">Videos</a>
+                <a href="https://youtu.be/J61zWeN2Lk4?si=3GneWAXn34KRM58v" class="visions-link" data-glitch="They see you.">Visions</a>
             </div>    
 
+            <!-- Photos -->
             <div class="media-link">
-                <a href="#photos" class="media-link">Photos</a>
+                <a href="#photos" class="media-link">Echoes</a>
             </div>  
 
             <!-- Reviews -->
             <div class="media-link">
-                <a href="https://onyxmusicreviews.com/2024/08/16/through-the-gloom-dark-patterns/" class="media-link">Words</a>
+                <a href="https://onyxmusicreviews.com/2024/08/16/through-the-gloom-dark-patterns/" class="media-link">Whispers</a>
             </div> 
+
+            <!-- Music maker -->
+            <div class="media-link">
+                <a href="#placeholder" class="media-link">Summon</a>
+            </div> 
+
         </div>
     </div>
 
@@ -264,6 +339,8 @@
         </div>
 
     </div>
+
+    <div class="static-screen" id="staticScreen"></div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -335,6 +412,27 @@ setTimeout(() => showGhost("ghost_02"), Math.random() * (35000 - 12000) + 12000)
 
 // ghost_03 less frequent, longer gaps
 setTimeout(() => showGhost("ghost_03"), Math.random() * (90000 - 4000) + 40000);
+    
+    document.addEventListener("DOMContentLoaded", function() {
+            const link = document.querySelector(".visions-link");
+            const staticScreen = document.getElementById("staticScreen");
+            const glitchTexts = [
+                "Visions of Gloom",
+            ];
+
+            link.addEventListener("mouseenter", () => {
+                const randomText = glitchTexts[Math.floor(Math.random() * glitchTexts.length)];
+                link.setAttribute("data-glitch", randomText);
+            });
+
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                staticScreen.style.opacity = "0.8";
+                setTimeout(() => {
+                    window.location.href = link.href;
+                }, 500);
+            });
+        });
 
     </script>    
    
