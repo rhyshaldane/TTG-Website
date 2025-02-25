@@ -236,6 +236,7 @@
       z-index: 10000; /* Ensures it's above other elements */
       justify-content: center;
       align-items: center;
+      cursor: default;
     }
 
     .gallery {
@@ -243,16 +244,17 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
-      max-width: 90%;
+      max-width: 50vw;
     }
 
     .gallery a {
-      display: block;
-      width: 120px; /* Thumbnail size */
-      height: 80px;
+      flex: 1 1 calc(100% / 5 - 5px); /* change the px to change gallery photo size, match it with the pcx below */
+      max-width: calc(100% / 5 - 5px); /* Ensures correct sizing */
+      height: auto;
       overflow: hidden;
       border-radius: 5px;
-      transition: transform 0.2s ease-in-out;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
     }
 
     .gallery a:hover {
@@ -261,9 +263,29 @@
 
     .gallery img {
       width: 100%;
-      height: 100%;
+      height: auto;
       object-fit: cover;
       border-radius: 5px;
+      transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+    }
+
+    /* Hover effect activates when mouse is nearby */
+    .gallery a::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      left: -50px;
+      right: -50px;
+      bottom: -50px;
+      background: transparent;
+      z-index: 2;
+    }
+
+    /* Apply the scale effect when mouse enters this expanded area */
+    .gallery a:hover img,
+    .gallery a::before:hover + img {
+      transform: scale(1.1);
+      filter: brightness(1.1) contrast(1.2);
     }
 
     /* Close button for gallery */
@@ -321,6 +343,7 @@
       cursor: pointer;
       z-index: 10001;
     }
+
     /* Lightbox for "Echoes" */
     .lightbox {
       display: none;
@@ -330,8 +353,11 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.95);
+      background: rgba(0, 0, 0, 0.95); /* Dark background */
+      justify-content: center;
+      align-items: center;
     }
+
     .lightbox-content {
       position: relative;
       margin: 5% auto;
@@ -353,6 +379,24 @@
       cursor: pointer;
       z-index: 10001;
     }
+
+    .lightbox img {
+      max-width: 80vw; /* Ensure image isn't too large */
+      max-height: 80vh;
+      border-radius: 5px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    #closeLightbox {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+      z-index: 10001;
+    }
+
     /* Sliding Side Panel for "Whispers" */
     .side-panel {
       position: fixed;
@@ -457,7 +501,7 @@
     </div>
   </div>
 
-<!-- Lightbox Gallery for "Echoes" -->
+<!-- Lightbox Gallery for "Echoes"  add more <a> elements for new photos-->
 <div class="gallery-container">
   <div class="gallery">
     <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2911.jpg" data-lightbox="ttg-gallery">
@@ -490,146 +534,220 @@
        ========================= -->
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Wrap each letter of the band name in a span for individual opacity control
-      let bandName = document.querySelector(".band-name");
-      let text = bandName.textContent;
-      bandName.innerHTML = "";
-      text.split("").forEach(char => {
-        let span = document.createElement("span");
-        span.textContent = char === " " ? "\u00A0" : char;
-        span.style.display = "inline-block";
-        span.style.transition = "opacity 0.1s ease-out";
-        span.style.opacity = "0.1";
-        span.style.color = "white";
-        bandName.appendChild(span);
-      });
-  
-      // Wrap each media link's text in spans with default opacity 0.4
-      document.querySelectorAll(".media-link a").forEach(link => {
-        let linkText = link.textContent;
-        link.innerHTML = "";
-        linkText.split("").forEach(char => {
-          let span = document.createElement("span");
-          span.textContent = char === " " ? "\u00A0" : char;
-          span.style.display = "inline-block";
-          span.style.transition = "opacity 0.1s ease-out";
-          span.style.opacity = "0.4"; // default starting opacity
-          span.style.color = "white";
-          link.appendChild(span);
-        });
-      });
-    });
-  
-    document.addEventListener("mousemove", function(e) {
-      // Move the flashlight (cursor beam) to follow the mouse pointer
-      let flashlight = document.querySelector(".flashlight");
-      flashlight.style.left = e.clientX + "px";
-      flashlight.style.top = e.clientY + "px";
-      
-      let maxDistance = 300;
-  
-      // Update band name letters based on cursor proximity
-      let bandLetters = document.querySelectorAll(".band-name span");
-      bandLetters.forEach(letter => {
-        let rect = letter.getBoundingClientRect();
-        let letterCenterX = rect.left + rect.width / 2;
-        let letterCenterY = rect.top + rect.height / 2;
-        let distance = Math.hypot(e.clientX - letterCenterX, e.clientY - letterCenterY);
-        let opacityFactor = 1 - Math.min(distance / maxDistance, 1);
-        letter.style.opacity = `${0.1 + (0.9 * opacityFactor)}`;
-      });
-  
-      // Update media link letters with a base opacity of 0.4
-      let mediaLetters = document.querySelectorAll(".media-link a span");
-      mediaLetters.forEach(letter => {
-        let rect = letter.getBoundingClientRect();
-        let letterCenterX = rect.left + rect.width / 2;
-        let letterCenterY = rect.top + rect.height / 2;
-        let distance = Math.hypot(e.clientX - letterCenterX, e.clientY - letterCenterY);
-        let opacityFactor = 1 - Math.min(distance / maxDistance, 1);
-        letter.style.opacity = `${0.4 + (0.6 * opacityFactor)}`;
-      });
-    });
-  
-    // =========================
-    // Modal & Panel JavaScript
-    // =========================
-  
-    // Video Modal (Visions)
-    const visionsLink = document.getElementById('visionsLink');
-    const videoModal = document.getElementById('videoModal');
-    const videoFrame = document.getElementById('videoFrame');
-    const closeVideoModal = document.getElementById('closeVideoModal');
-  
-    visionsLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      // Convert shortened YouTube URL to embed URL
-      let videoUrl = this.getAttribute('href').replace("youtu.be", "www.youtube.com/embed");
-      videoFrame.src = videoUrl;
-      videoModal.style.display = "block";
-    });
-  
-    closeVideoModal.addEventListener('click', function() {
-      videoModal.style.display = "none";
-      videoFrame.src = "";
-    });
-  
-    // Lightbox for Photos (Echoes)
-    const echoesLink = document.getElementById('echoesLink');
-    const galleryContainer = document.querySelector('.gallery-container');
-    const closeGallery = document.getElementById('closeGallery');
 
-    echoesLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      galleryContainer.style.display = 'flex'; // Show gallery as an overlay
-    });
+document.addEventListener("DOMContentLoaded", function() {
+  // =========================
+  // Band Name Animation
+  // =========================
+  let bandName = document.querySelector(".band-name");
+  let text = bandName.textContent;
+  bandName.innerHTML = "";
+  text.split("").forEach(char => {
+    let span = document.createElement("span");
+    span.textContent = char === " " ? "\u00A0" : char;
+    span.style.display = "inline-block";
+    span.style.transition = "opacity 0.1s ease-out";
+    span.style.opacity = "0.1";
+    span.style.color = "white";
+    bandName.appendChild(span);
+  });
 
-    closeGallery.addEventListener('click', function() {
-      galleryContainer.style.display = 'none'; // Hide gallery when clicking close button
+  // Wrap each media link's text in spans with default opacity 0.4
+  document.querySelectorAll(".media-link a").forEach(link => {
+    let linkText = link.textContent;
+    link.innerHTML = "";
+    linkText.split("").forEach(char => {
+      let span = document.createElement("span");
+      span.textContent = char === " " ? "\u00A0" : char;
+      span.style.display = "inline-block";
+      span.style.transition = "opacity 0.1s ease-out";
+      span.style.opacity = "0.4"; // default starting opacity
+      span.style.color = "white";
+      link.appendChild(span);
     });
+  });
 
-  
-    // Side Panel for Reviews (Whispers)
-    const whispersLink = document.getElementById('whispersLink');
-    const whispersPanel = document.getElementById('whispersPanel');
-    const closeWhispersPanel = document.getElementById('closeWhispersPanel');
-  
-    whispersLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      whispersPanel.classList.add('open');
-    });
-  
-    closeWhispersPanel.addEventListener('click', function() {
-      whispersPanel.classList.remove('open');
-    });
-  
-    // =========================
-    // End Modal & Panel JavaScript
-    // =========================
-  
-    // Ghost flicker functionality
-    function showGhost(ghostId) {
-      let ghost = document.getElementById(ghostId);
-      let visibleDuration = Math.random() * (1500 - 500) + 500; // visible for 500ms to 1500ms
-      ghost.style.animation = "glitch-flicker 0.15s infinite alternate, glitch-slices 0.12s infinite alternate";
-      ghost.style.opacity = "0.8";
-      setTimeout(() => {
-        ghost.style.opacity = "0.6";
-        setTimeout(() => {
-          ghost.style.opacity = "0";
-          ghost.style.animation = "";
-          let nextAppearance = Math.random() * (180000 - 60000) + 60000; // next appearance between 60s and 180s
-          setTimeout(() => showGhost(ghostId), nextAppearance);
-        }, 200);
-      }, visibleDuration);
+  // =========================
+  // Gallery Auto-Arrange Function
+  // =========================
+  function adjustGalleryLayout() {
+    const gallery = document.querySelector('.gallery');
+    const images = gallery.querySelectorAll('a');
+    let totalImages = images.length;
+
+    if (totalImages === 0) return; // Prevent errors if no images exist
+
+    let rowCounter = 0;
+    let imagesInRow = 5;
+
+    for (let i = 0; i < totalImages; i++) {
+      if (rowCounter >= imagesInRow) {
+        rowCounter = 0;
+        imagesInRow = imagesInRow === 5 ? 6 : 5; // Alternate row sizes
+      }
+      images[i].style.flex = `1 1 calc(100% / ${imagesInRow} - 10px)`;
+      images[i].style.maxWidth = `calc(100% / ${imagesInRow} - 10px)`;
+      rowCounter++;
     }
-  
-    // Initiate ghost effects with random initial delays
-    setTimeout(() => showGhost("ghost"), Math.random() * (30000 - 10000) + 10000);
-    setTimeout(() => showGhost("ghost_02"), Math.random() * (35000 - 12000) + 12000);
-    setTimeout(() => showGhost("ghost_03"), Math.random() * (90000 - 4000) + 40000);
+  }
+
+  // Call function on page load to arrange existing images
+  adjustGalleryLayout();
+
+  // =========================
+  // Lightbox for Photos (Echoes)
+  // =========================
+  const echoesLink = document.getElementById('echoesLink');
+  const galleryContainer = document.querySelector('.gallery-container');
+  const closeGallery = document.getElementById('closeGallery');
+
+  // Close gallery when Escape key is pressed
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && galleryContainer.style.display === "flex") {
+      galleryContainer.style.display = "none";
+    }
+  });
+
+
+  echoesLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    galleryContainer.style.display = 'flex'; // Show gallery as an overlay
+  });
+
+  closeGallery.addEventListener('click', function() {
+    galleryContainer.style.display = 'none'; // Hide gallery when clicking close button
+  });
+
+    // =========================
+    // Fullscreen Lightbox for Gallery Images
+    // =========================
+    const galleryImages = document.querySelectorAll(".gallery a");
+    const lightbox = document.querySelector(".lightbox");
+    const lightboxImg = document.querySelector(".lightbox img");
+    const closeLightbox = document.getElementById("closeLightbox");
+
+    galleryImages.forEach(imageLink => {
+      imageLink.addEventListener("click", function(e) {
+        e.preventDefault(); // Prevent default download behavior
+        lightboxImg.src = this.getAttribute("href"); // Set the clicked image as source
+        lightbox.style.display = "flex"; // Show the lightbox
+      });
+    });
+
+    // Close Lightbox When Clicking Close Button or Pressing Escape
+    closeLightbox.addEventListener("click", function() {
+      lightbox.style.display = "none";
+    });
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape" && lightbox.style.display === "flex") {
+        lightbox.style.display = "none";
+      }
+    });
+
+
+  // =========================
+  // Mouse Move for Flashlight Effect
+  // =========================
+  document.addEventListener("mousemove", function(e) {
+    let flashlight = document.querySelector(".flashlight");
+    flashlight.style.left = e.clientX + "px";
+    flashlight.style.top = e.clientY + "px";
+
+    let maxDistance = 300;
+
+    // Update band name letters based on cursor proximity
+    let bandLetters = document.querySelectorAll(".band-name span");
+    bandLetters.forEach(letter => {
+      let rect = letter.getBoundingClientRect();
+      let letterCenterX = rect.left + rect.width / 2;
+      let letterCenterY = rect.top + rect.height / 2;
+      let distance = Math.hypot(e.clientX - letterCenterX, e.clientY - letterCenterY);
+      let opacityFactor = 1 - Math.min(distance / maxDistance, 1);
+      letter.style.opacity = `${0.1 + (0.9 * opacityFactor)}`;
+    });
+
+    // Update media link letters with a base opacity of 0.4
+    let mediaLetters = document.querySelectorAll(".media-link a span");
+    mediaLetters.forEach(letter => {
+      let rect = letter.getBoundingClientRect();
+      let letterCenterX = rect.left + rect.width / 2;
+      let letterCenterY = rect.top + rect.height / 2;
+      let distance = Math.hypot(e.clientX - letterCenterX, e.clientY - letterCenterY);
+      let opacityFactor = 1 - Math.min(distance / maxDistance, 1);
+      letter.style.opacity = `${0.4 + (0.6 * opacityFactor)}`;
+    });
+  });
+
+  // =========================
+  // Modal & Panel JavaScript
+  // =========================
+  const visionsLink = document.getElementById('visionsLink');
+  const videoModal = document.getElementById('videoModal');
+  const videoFrame = document.getElementById('videoFrame');
+  const closeVideoModal = document.getElementById('closeVideoModal');
+
+  visionsLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    let videoUrl = this.getAttribute('href').replace("youtu.be", "www.youtube.com/embed");
+    videoFrame.src = videoUrl;
+    videoModal.style.display = "block";
+  });
+
+  closeVideoModal.addEventListener('click', function() {
+    videoModal.style.display = "none";
+    videoFrame.src = "";
+  });
+
+  // =========================
+  // Side Panel for Reviews (Whispers)
+  // =========================
+  const whispersLink = document.getElementById('whispersLink');
+  const whispersPanel = document.getElementById('whispersPanel');
+  const closeWhispersPanel = document.getElementById('closeWhispersPanel');
+
+  whispersLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    whispersPanel.classList.add('open');
+  });
+
+  closeWhispersPanel.addEventListener('click', function() {
+    whispersPanel.classList.remove('open');
+  });
+
+  // =========================
+  // Ghost Flicker Functionality
+  // =========================
+  function showGhost(ghostId) {
+    let ghost = document.getElementById(ghostId);
+    let visibleDuration = Math.random() * (1500 - 500) + 500; // 500ms to 1500ms
+    ghost.style.animation = "glitch-flicker 0.15s infinite alternate, glitch-slices 0.12s infinite alternate";
+    ghost.style.opacity = "0.8";
+    setTimeout(() => {
+      ghost.style.opacity = "0.6";
+      setTimeout(() => {
+        ghost.style.opacity = "0";
+        ghost.style.animation = "";
+        let nextAppearance = Math.random() * (180000 - 60000) + 60000; // 60s to 180s
+        setTimeout(() => showGhost(ghostId), nextAppearance);
+      }, 200);
+    }, visibleDuration);
+  }
+
+  // Initiate ghost effects with random initial delays
+  setTimeout(() => showGhost("ghost"), Math.random() * (30000 - 10000) + 10000);
+  setTimeout(() => showGhost("ghost_02"), Math.random() * (35000 - 12000) + 12000);
+  setTimeout(() => showGhost("ghost_03"), Math.random() * (90000 - 4000) + 40000);
+});
+
   </script>
   
+<!-- Fullscreen Lightbox -->
+<div id="lightbox" class="lightbox">
+  <span id="closeLightbox">&times;</span>
+  <img id="lightboxImg" src="" alt="Full-size image">
+</div>
+
+
 </body>
 </html>
