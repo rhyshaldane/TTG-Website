@@ -356,6 +356,7 @@
       background: rgba(0, 0, 0, 0.95); /* Dark background */
       justify-content: center;
       align-items: center;
+      cursor: default;
     }
 
     .lightbox-content {
@@ -385,6 +386,7 @@
       max-height: 80vh;
       border-radius: 5px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      cursor: default;
     }
 
     #closeLightbox {
@@ -603,11 +605,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Close gallery when Escape key is pressed
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && galleryContainer.style.display === "flex") {
-      galleryContainer.style.display = "none";
+    if (e.key === "Escape") {
+      const lightboxImg = document.querySelector(".lightbox");
+      const galleryContainer = document.querySelector(".gallery-container");
+
+      if (lightboxImg.style.display === "flex") {
+        // If full-screen image is open, close it & return to gallery
+        lightboxImg.style.display = "none";
+        galleryContainer.style.display = "flex";
+      } else if (galleryContainer.style.display === "flex") {
+        // If gallery is open, close it
+        galleryContainer.style.display = "none";
+      }
     }
   });
-
 
   echoesLink.addEventListener('click', function(e) {
     e.preventDefault();
