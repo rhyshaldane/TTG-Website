@@ -225,6 +225,64 @@
       z-index: 9999;
     }
 
+    .gallery-container {
+      display: none; /* Initially hidden */
+      position: fixed; /* Keeps it from affecting layout */
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9); /* Dark overlay */
+      z-index: 10000; /* Ensures it's above other elements */
+      justify-content: center;
+      align-items: center;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 90%;
+    }
+
+    .gallery a {
+      display: block;
+      width: 120px; /* Thumbnail size */
+      height: 80px;
+      overflow: hidden;
+      border-radius: 5px;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .gallery a:hover {
+      transform: scale(1.1);
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    /* Close button for gallery */
+    #closeGallery {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+      z-index: 10001;
+    }
+
+    .lb-image {
+      max-width: 70vw !important; /* Make the lightbox image medium size */
+      max-height: 70vh !important;
+    }
+
+
     /* =========================
        Modal & Panel Styles
        ========================= */
@@ -399,13 +457,27 @@
     </div>
   </div>
 
-  <!-- Lightbox for "Echoes" -->
-  <div id="lightbox" class="lightbox">
-    <div class="lightbox-content">
-      <span class="close" id="closeLightbox">&times;</span>
-      <img src="images/sample_photo.jpg" alt="Echoes Photo">
-    </div>
+<!-- Lightbox Gallery for "Echoes" -->
+<div class="gallery-container">
+  <div class="gallery">
+    <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2911.jpg" data-lightbox="ttg-gallery">
+      <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2911.jpg" class="gallery-thumb" alt="DSCF2911">
+    </a>
+    <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2917.jpg" data-lightbox="ttg-gallery">
+      <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2917.jpg" class="gallery-thumb" alt="DSCF2917">
+    </a>
+    <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2955.jpg" data-lightbox="ttg-gallery">
+      <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2955.jpg" class="gallery-thumb" alt="DSCF2955">
+    </a>
+    <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF3015.jpg" data-lightbox="ttg-gallery">
+      <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF3015.jpg" class="gallery-thumb" alt="DSCF3015">
+    </a>
+    <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF3034.jpg" data-lightbox="ttg-gallery">
+      <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF3034.jpg" class="gallery-thumb" alt="DSCF3034">
+    </a>
+    <span id="closeGallery">&times;</span>
   </div>
+</div>
 
   <!-- Sliding Side Panel for "Whispers" -->
   <div id="whispersPanel" class="side-panel">
@@ -505,17 +577,18 @@
   
     // Lightbox for Photos (Echoes)
     const echoesLink = document.getElementById('echoesLink');
-    const lightbox = document.getElementById('lightbox');
-    const closeLightbox = document.getElementById('closeLightbox');
-  
+    const galleryContainer = document.querySelector('.gallery-container');
+    const closeGallery = document.getElementById('closeGallery');
+
     echoesLink.addEventListener('click', function(e) {
       e.preventDefault();
-      lightbox.style.display = "block";
+      galleryContainer.style.display = 'flex'; // Show gallery as an overlay
     });
-  
-    closeLightbox.addEventListener('click', function() {
-      lightbox.style.display = "none";
+
+    closeGallery.addEventListener('click', function() {
+      galleryContainer.style.display = 'none'; // Hide gallery when clicking close button
     });
+
   
     // Side Panel for Reviews (Whispers)
     const whispersLink = document.getElementById('whispersLink');
