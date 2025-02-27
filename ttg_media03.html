@@ -939,11 +939,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
   whispersLink.addEventListener('click', function(e) {
     e.preventDefault();
-    whispersPanel.classList.add('open');
+    whispersPanel.classList.toggle('open');
   });
 
   closeWhispersPanel.addEventListener('click', function() {
     whispersPanel.classList.remove('open');
+  });
+
+  // Close Whispers panel when Escape key is pressed
+  document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+          if (whispersPanel.classList.contains("open")) {
+              whispersPanel.classList.remove("open");
+          }
+      }
   });
 
   // =========================
