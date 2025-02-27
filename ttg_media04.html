@@ -161,11 +161,13 @@
       transform: translateX(-50%);
       text-align: center;
       opacity: 0.3;
-      font-size: 12px;
+      font-size: 10px;
       z-index: 3;
       font-family: "Manrope", serif;
       letter-spacing: 2px;
       color: white;
+      width: auto;
+      white-space: nowrap;
     }
     .bottom-nav a {
       text-decoration: none;
@@ -416,6 +418,22 @@
       border: none;
     }
 
+    .video-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .video-title {
+        margin-top: 8px;
+        font-size: 14px;
+        color: white;
+        font-family: 'VoidThin', sans-serif;
+        letter-spacing: 1px;
+        opacity: 0.8;
+    }
+
     /* Side Panel for Reviews */
     .side-panel {
       position: fixed;
@@ -498,6 +516,7 @@
       <a href="https://www.instagram.com/through.the.gloom/?hl=en" target="_blank">Instagram</a> |
       <a href="https://www.facebook.com/throughthegloom/" target="_blank">Facebook</a>
     </div>
+    <div>© 2025 Through the Gloom. All content produced by Through the Gloom. Additional elements produced by Utopian Mechanics.</div>
   </div>
 
   <div class="static-screen" id="staticScreen"></div>
@@ -535,18 +554,23 @@
   <!-- Video Gallery (Visions) -->
   <div class="video-gallery-container" id="videoGallery">
     <span class="close-button" id="closeVideoGallery">&times;</span>
-    <div class="video-gallery-title">Through the Gloom - Videos</div>
+    <div class="video-gallery-title">Visions of Gloom</div>
     <div class="video-gallery">
-      <a href="https://www.youtube.com/embed/J61zWeN2Lk4" data-video>
-        <img src="https://img.youtube.com/vi/J61zWeN2Lk4/0.jpg" alt="Through the Gloom">
-      </a>
-      <a href="https://www.youtube.com/embed/4wkTC2ZjINo" data-video>
-        <img src="https://img.youtube.com/vi/4wkTC2ZjINo/0.jpg" alt="Dark Patterns Teaser">
-      </a>
-      <a href="https://www.youtube.com/embed/IBmCN9wV-74" data-video>
-        <img src="https://img.youtube.com/vi/IBmCN9wV-74/0.jpg" alt="Nostromos Teaser">
-      </a>
+
+        <div class="video-item">
+          <a href="https://www.youtube.com/embed/4wkTC2ZjINo" data-video>
+            <img src="https://img.youtube.com/vi/4wkTC2ZjINo/0.jpg" alt="Dark Patterns Teaser">
+          </a>
+          <p class="video-title">Dark Patterns Teaser</p>
+        </div>
+
+        <div class="video-item">
+          <a href="https://www.youtube.com/embed/IBmCN9wV-74" data-video>
+            <img src="https://img.youtube.com/vi/IBmCN9wV-74/0.jpg" alt="Nostromos Teaser">
+          </a>
+          <p class="video-title">Nostromos Reckoning Teaser</p>
     </div>
+
   </div>
 
   <!-- Video Lightbox -->
