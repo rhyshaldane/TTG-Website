@@ -760,6 +760,23 @@
         });
       });
 
+      // Add keyboard navigation for full-screen photos
+      document.addEventListener("keydown", function(event) {
+          if (photoLightbox.style.display === "flex") {  // Only if lightbox is open
+              if (event.key === "ArrowLeft") {  // Navigate to previous image
+                  let newIndex = currentImageIndex - 1;
+                  if (newIndex < 0) newIndex = galleryLinks.length - 1;
+                  showImage(newIndex);
+              } else if (event.key === "ArrowRight") {  // Navigate to next image
+                  let newIndex = currentImageIndex + 1;
+                  if (newIndex >= galleryLinks.length) newIndex = 0;
+                  showImage(newIndex);
+              } else if (event.key === "Escape") {  // Close lightbox with Escape key
+                  photoLightbox.style.display = 'none';
+              }
+          }
+      });
+
       // =========================
       // Mouse Move for Flashlight Effect
       // =========================
