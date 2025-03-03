@@ -258,15 +258,27 @@
       transition: transform 0.1s ease-in-out, filter 0.1s ease-in-out;
     }
 
-    /* Close button for gallery */
     .close-button {
       position: absolute;
       top: 15px;
-      left: 20px;
       font-size: 20px;
       color: white;
       cursor: pointer;
       z-index: 10001;
+    }
+
+    /* Close button for Visions (video gallery) and Echoes (photo gallery) */
+    .close-button.visions, 
+    .close-button.echoes {
+      right: 20px;
+      left: auto;
+      font-size: 26px;
+    }
+
+    /* Close button for Whispers sidebar (keep on the left) */
+    .close-button.whispers {
+      left: 10px;
+      right: auto;
     }
 
     /* Lightbox styles */
@@ -529,7 +541,7 @@
 
   <!-- Photo Gallery (Echoes) -->
   <div class="gallery-container" id="photoGallery">
-    <span class="close-button" id="closePhotoGallery">&times;</span>
+    <span class="close-button echoes" id="closePhotoGallery">&times;</span>
     <div class="gallery">
       <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2917.jpg" data-lightbox="ttg-gallery">
         <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2917.jpg" class="gallery-thumb" alt="Through the Gloom photo 2">
@@ -551,7 +563,7 @@
 
   <!-- Fullscreen Photo Lightbox -->
   <div id="photoLightbox" class="lightbox">
-    <span class="close-button" id="closePhotoLightbox">&times;</span>
+    <span class="close-button echoes" id="closePhotoLightbox">&times;</span>
     <div id="lightboxNavPrev" class="lightbox-nav lightbox-nav-prev">&lt;</div>
     <div id="lightboxNavNext" class="lightbox-nav lightbox-nav-next">&gt;</div>
     <img id="lightboxImg" src="" alt="Full-size image">
@@ -559,7 +571,7 @@
 
   <!-- Video Gallery (Visions) -->
   <div class="video-gallery-container" id="videoGallery">
-    <span class="close-button" id="closeVideoGallery">&times;</span>
+    <span class="close-button visions" id="closeVideoGallery">&times;</span>
     <div class="video-gallery-title">Visions of Gloom</div>
     <div class="video-gallery">
 
@@ -581,7 +593,7 @@
 
   <!-- Video Lightbox -->
   <div id="videoLightbox" class="video-lightbox">
-    <span class="close-button" id="closeVideoLightbox">&times;</span>
+    <span class="close-button visions" id="closeVideoLightbox">&times;</span>
     <div class="video-lightbox-content">
       <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
     </div>
@@ -591,7 +603,7 @@
 
   <!-- Sliding Side Panel for Reviews (Whispers) -->
   <div id="whispersPanel" class="side-panel">
-      <span class="close-button" id="closeWhispersPanel">&times;</span>
+      <span class="close-button whispers" id="closeWhispersPanel">&times;</span>
       <iframe id="whispersFrame" src="https://onyxmusicreviews.com/2024/08/16/through-the-gloom-dark-patterns/"></iframe>
   </div>
 
