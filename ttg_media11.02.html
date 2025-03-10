@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Through the Gloom</title>
+  
+  <!-- Google Font links -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@100;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* Font setup for the band name */
+    @font-face {
+      font-family: 'VoidThin';
+      src: url('fonts/Void Thin.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'VoidRegular';
+      src: url('fonts/Void Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      background: url('images/forest01b.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: black;
+      text-align: center;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      cursor: none; /* Hide the default cursor */
+    }
+
+@keyframes flicker-word {
+  0%, 95% { opacity: 0.1; } /* Mostly dim */
+  96% { opacity: 0.3; }  /* Slight flicker */
+  98% { opacity: 0.6; }  /* Brief full flicker */
+  99% { opacity: 0.2; } /* Quick fade */
+  100% { opacity: 0.1; } /* Back to dim */
+}
+
+.media-link a {
+  display: inline-block;
+  color: white !important;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+  animation: flicker-word 5s infinite;
+}
+
+
+
+    /* Overlay for the flashlight effect */
+    .page-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 10%, rgba(0, 0, 0, 0.95) 90%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* Band name styling */
+    .band-name {
+      position: absolute;
+      top: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'VoidRegular', sans-serif;
+      font-size: 46px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      opacity: 0.8;
+      z-index: 2;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.3));
+      -webkit-background-clip: text;
+      color: rgba(255, 255, 255, 0.2);
+      transition: opacity 0.1s ease-out;
+      white-space: nowrap;
+    }
+
+    /* Scrolling media picker bar */
+    .media-bar {
+      position: absolute;
+      top: calc(30% + 18%);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      background: rgba(0, 0, 0, 0);
+      border-radius: 20px;
+      z-index: 4;
+      box-sizing: border-box;
+      min-height: 40px;
+    }
+
+    /* Media links styling */
+    .media-link {
+      text-decoration: none;
+      color: white;
+      font-family: 'VoidThin', sans-serif;
+      font-size: 16px;
+      letter-spacing: 2px;
+      transition: opacity 0.1s ease;
+      flex-shrink: 0;
+    }
+    .media-link a {
+      display: inline-block;
+      text-align: center;
+      padding: 5px 10px;
+      position: relative;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .media-link a:hover {
+      animation: vhs-glitch 0.3s infinite alternate ease-in-out;
+      opacity: 1;
+    }
+    .media-link a:visited,
+    .media-link a:active {
+      color: white;
+      text-decoration: none;
+    }
+
+    /* Bottom navigation bar styling */
+    .bottom-nav {
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      opacity: 0.3;
+      font-size: 10px;
+      z-index: 3;
+      font-family: "Manrope", serif;
+      letter-spacing: 2px;
+      color: white;
+      width: auto;
+      white-space: nowrap;
+    }
+    .bottom-nav a {
+      text-decoration: none;
+      color: white;
+      margin: 0 10px;
+      font-weight: lighter;
+    }
+
+    /* Flashlight effect styling */
+    .flashlight {
+      position: absolute;
+      width: 5vw;
+      height: 5vw;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 10%, rgba(0,0,0,0.9) 90%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+      z-index: 4;
+      border-radius: 50%;
+      animation: flicker 5s infinite ease-in-out, drift 15s infinite ease-in-out alternate;
+    }
+    @keyframes flicker {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      20% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.02); }
+      40% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.98); }
+      60% { opacity: 1; transform: translate(-50%, -50%) scale(1.01); }
+      80% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.03); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes drift {
+      0% { transform: translate(-50%, -50%) translateX(0px) translateY(0px); }
+      50% { transform: translate(-50%, -50%) translateX(5px) translateY(-3px); }
+      100% { transform: translate(-50%, -50%) translateX(-5px) translateY(3px); }
+    }
+
+
+    /* Static screen overlay */
+    .static-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('images/vhs_static(1).gif');
+      background-size: cover;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 9999;
+    }
+
+    /* Photo Gallery Styles */
+    .gallery-container {
+      display: none; /* Initially hidden */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      cursor: default;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 80%;
+    }
+
+    .gallery a {
+      flex: 1 1 calc(100% / 5 - 10px);
+      max-width: calc(100% / 5 - 10px);
+      height: auto;
+      overflow: hidden;
+      border-radius: 5px;
+      position: relative;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .gallery a:hover {
+      transform: scale(1.1);
+    }
+
+    .gallery img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 5px;
+      transition: transform 0.1s ease-in-out, filter 0.1s ease-in-out;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 15px;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+      z-index: 10001;
+    }
+
+    /* Close button for Visions (video gallery) and Echoes (photo gallery) */
+    .close-button.visions, 
+    .close-button.echoes {
+      right: 20px;
+      left: auto;
+      font-size: 26px;
+    }
+
+    /* Close button for Whispers sidebar (keep on the left) */
+    .close-button.whispers {
+      left: 10px;
+      right: auto;
+    }
+
+    /* Lightbox styles */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      justify-content: center;
+      align-items: center;
+      cursor: default;
+    }
+
+    .lightbox img {
+      max-width: 80vw;
+      max-height: 80vh;
+      border-radius: 5px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Lightbox navigation */
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 40px;
+      color: white;
+      background: rgba(0, 0, 0, 0.3);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+    }
+
+    .lightbox-nav:hover {
+      opacity: 1;
+    }
+
+    .lightbox-nav-prev {
+      left: 20px;
+    }
+
+    .lightbox-nav-next {
+      right: 20px;
+    }
+
+    /* Video Gallery Styles */
+    .video-gallery-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      cursor: default;
+    }
+
+    .video-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 80%;
+      margin-top: 20px;
+    }
+
+    .video-gallery-title {
+      color: white;
+      font-family: 'VoidThin', sans-serif;
+      font-size: 24px;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+    }
+
+    .video-gallery a {
+      display: block;
+      width: 250px;
+      height: auto;
+      border-radius: 5px;
+      overflow: hidden;
+      transition: transform 0.2s ease-in-out;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .video-gallery a:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    }
+
+    .video-gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    /* Video player lightbox */
+    .video-lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 11000;
+      justify-content: center;
+      align-items: center;
+      cursor: default;
+    }
+
+    .video-lightbox-content {
+      position: relative;
+      width: 80%;
+      max-width: 800px;
+    }
+
+    .video-lightbox iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+    }
+
+    .video-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .video-title {
+        margin-top: 8px;
+        font-size: 14px;
+        color: white;
+        font-family: 'VoidThin', sans-serif;
+        letter-spacing: 1px;
+        opacity: 0.8;
+    }
+
+    /* Side Panel for Reviews */
+    .side-panel {
+      position: fixed;
+      right: -400px;
+      top: 0;
+      width: 400px;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 10000;
+      overflow: auto;
+      transition: right 0.5s ease;
+      box-shadow: -5px 0 20px rgba(255,255,255,0.2);
+    }
+    
+    .side-panel.open {
+      right: 0;
+    }
+    
+    .side-panel .close-panel {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: #fff;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    .side-panel iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      overflow: hidden;
+      display: block;
+    }
+
+    .background-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .background-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      position: absolute;
+      transform: translate(-50%);
+      z-index: 0;
+    }
+
+    @keyframes random-flicker {
+      0% { opacity: 1; filter: none; }
+      10% { opacity: 0.6; filter: brightness(1.2) contrast(1.1); }
+      20% { opacity: 0.9; filter: hue-rotate(3deg); }
+      35% { opacity: 0.5; filter: brightness(0.8) contrast(0.9); }
+      50% { opacity: 1; filter: none; }
+      65% { opacity: 0.7; filter: hue-rotate(-3deg) contrast(1.2); }
+      80% { opacity: 1; filter: none; }
+      100% { opacity: 1; filter: none; }
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="page-overlay"></div>
+
+  <!-- Ghost images for glitch effect -->
+  <div class="background-container">
+    <img id="background-image" src="images/forestghosts/forestnoghost.png" alt="Forest Background">
+  </div>
+
+  <!-- Flashlight element that follows the mouse -->
+  <div class="flashlight"></div>
+
+  <!-- Container for band name and media bar -->
+  <div class="container">
+    <div class="band-name">Through the Gloom</div>
+    
+    <!-- Scrolling media bar with links -->
+    <div class="media-bar">
+      <!-- Videos: Visions -->
+      <div class="media-link">
+        <a href="#videos" id="visionsLink">Visions</a>
+      </div>
+      <!-- Photos: Echoes -->
+      <div class="media-link">
+        <a href="#photos" id="echoesLink">Echoes</a>
+      </div>
+      <!-- Reviews: Whispers -->
+      <div class="media-link">
+        <a href="#reviews" id="whispersLink">Whispers</a>
+      </div>
+      <!-- Music maker: Summon -->
+      <div class="media-link">
+        <a href="#placeholder" id="summonLink">Summon</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom navigation bar -->
+  <div class="bottom-nav">
+    <div>
+      <a href="https://utopianmechanics.bandcamp.com/album/dark-patterns" target="_blank">Bandcamp</a> |
+      <a href="https://open.spotify.com/artist/76uTSrHT53n5oSbYtJ4rRp?si=9ErcgjoERiupjKQMsDtgyg" target="_blank">Spotify</a> |
+      <a href="https://music.apple.com/us/artist/through-the-gloom/1691335112" target="_blank">iTunes</a> |
+      <a href="https://www.instagram.com/through.the.gloom/?hl=en" target="_blank">Instagram</a> |
+      <a href="https://www.facebook.com/throughthegloom/" target="_blank">Facebook</a>
+    </div>
+    <div>© 2025 Through the Gloom. All content produced by Through the Gloom. Additional elements produced by Utopian Mechanics.</div>
+  </div>
+
+  <div class="static-screen" id="staticScreen"></div>
+
+  <!-- Photo Gallery (Echoes) -->
+  <div class="gallery-container" id="photoGallery">
+    <span class="close-button echoes" id="closePhotoGallery">&times;</span>
+    <div class="gallery">
+      <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2917.jpg" data-lightbox="ttg-gallery">
+        <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2917.jpg" class="gallery-thumb" alt="Through the Gloom photo 2">
+      </a>
+      <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2955.jpg" data-lightbox="ttg-gallery">
+        <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF2955.jpg" class="gallery-thumb" alt="Through the Gloom photo 3">
+      </a>
+      <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF3015.jpg" data-lightbox="ttg-gallery">
+        <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF3015.jpg" class="gallery-thumb" alt="Through the Gloom photo 4">
+      </a>
+      <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF3034.jpg" data-lightbox="ttg-gallery">
+        <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website-Pics/refs/heads/main/DSCF3034.jpg" class="gallery-thumb" alt="Through the Gloom photo 5">
+      </a>
+      <a href="https://raw.githubusercontent.com/rhyshaldane/TTG-Website/refs/heads/main/DSCF6750.jpg" data-lightbox="ttg-gallery">
+        <img src="https://raw.githubusercontent.com/rhyshaldane/TTG-Website/refs/heads/main/DSCF6750.jpg" class="gallery-thumb" alt="Through the Gloom photo 1">
+      </a>
+    </div>
+  </div>
+
+  <!-- Fullscreen Photo Lightbox -->
+  <div id="photoLightbox" class="lightbox">
+    <span class="close-button echoes" id="closePhotoLightbox">&times;</span>
+    <div id="lightboxNavPrev" class="lightbox-nav lightbox-nav-prev">&lt;</div>
+    <div id="lightboxNavNext" class="lightbox-nav lightbox-nav-next">&gt;</div>
+    <img id="lightboxImg" src="" alt="Full-size image">
+  </div>
+
+  <!-- Video Gallery (Visions) -->
+  <div class="video-gallery-container" id="videoGallery">
+    <span class="close-button visions" id="closeVideoGallery">&times;</span>
+    <div class="video-gallery-title">Visions of Gloom</div>
+    <div class="video-gallery">
+
+        <div class="video-item">
+          <a href="https://www.youtube.com/embed/4wkTC2ZjINo" data-video>
+            <img src="https://img.youtube.com/vi/4wkTC2ZjINo/0.jpg" alt="Dark Patterns Teaser">
+          </a>
+          <p class="video-title">Dark Patterns Teaser</p>
+        </div>
+
+        <div class="video-item">
+          <a href="https://www.youtube.com/embed/IBmCN9wV-74" data-video>
+            <img src="https://img.youtube.com/vi/IBmCN9wV-74/0.jpg" alt="Nostromos Teaser">
+          </a>
+          <p class="video-title">Nostromos Reckoning Teaser</p>
+    </div>
+
+  </div>
+
+  <!-- Video Lightbox -->
+  <div id="videoLightbox" class="video-lightbox">
+    <span class="close-button visions" id="closeVideoLightbox">&times;</span>
+    <div class="video-lightbox-content">
+      <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Sliding Side Panel for Reviews (Whispers) -->
+  <div id="whispersPanel" class="side-panel">
+      <span class="close-button whispers" id="closeWhispersPanel">&times;</span>
+      <iframe id="whispersFrame" src="https://onyxmusicreviews.com/2024/08/16/through-the-gloom-dark-patterns/"></iframe>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // =========================
+      // Band Name Animation
+      // =========================
+      let bandName = document.querySelector(".band-name");
+      let text = bandName.textContent;
+      bandName.innerHTML = "";
+      text.split("").forEach(char => {
+        let span = document.createElement("span");
+        span.textContent = char === " " ? "\u00A0" : char;
+        span.style.display = "inline-block";
+        span.style.transition = "opacity 0.1s ease-out";
+        span.style.opacity = "0.1";
+        span.style.color = "white";
+        bandName.appendChild(span);
+      });
+
+
+      // =========================
+      // Photo Gallery (Echoes)
+      // =========================
+      const echoesLink = document.getElementById('echoesLink');
+      const photoGallery = document.getElementById('photoGallery');
+      const closePhotoGallery = document.getElementById('closePhotoGallery');
+      const photoLightbox = document.getElementById('photoLightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const closePhotoLightbox = document.getElementById('closePhotoLightbox');
+      const lightboxNavPrev = document.getElementById('lightboxNavPrev');
+      const lightboxNavNext = document.getElementById('lightboxNavNext');
+      let currentImageIndex = 0;
+      const galleryLinks = document.querySelectorAll(".gallery a");
+
+      // Open photo gallery
+      echoesLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        photoGallery.style.display = 'flex';
+      });
+
+      // Close photo gallery
+      closePhotoGallery.addEventListener('click', function() {
+        photoGallery.style.display = 'none';
+      });
+
+      // Open photo lightbox
+      galleryLinks.forEach((link, index) => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          currentImageIndex = index;
+          lightboxImg.src = this.getAttribute('href');
+          photoLightbox.style.display = 'flex';
+        });
+      });
+
+      // Close photo lightbox
+      closePhotoLightbox.addEventListener('click', function() {
+        photoLightbox.style.display = 'none';
+      });
+
+      // Function to show image by index
+      function showImage(index) {
+        currentImageIndex = index;
+        lightboxImg.src = galleryLinks[index].getAttribute("href");
+      }
+
+      // Lightbox navigation
+      lightboxNavPrev.addEventListener("click", function() {
+        let newIndex = currentImageIndex - 1;
+        if (newIndex < 0) newIndex = galleryLinks.length - 1;
+        showImage(newIndex);
+      });
+
+      lightboxNavNext.addEventListener("click", function() {
+        let newIndex = currentImageIndex + 1;
+        if (newIndex >= galleryLinks.length) newIndex = 0;
+        showImage(newIndex);
+      });
+
+      // =========================
+      // Video Gallery (Visions)
+      // =========================
+      const visionsLink = document.getElementById('visionsLink');
+      const videoGallery = document.getElementById('videoGallery');
+      const closeVideoGallery = document.getElementById('closeVideoGallery');
+      const videoLinks = document.querySelectorAll(".video-gallery a[data-video]");
+      const videoLightbox = document.getElementById('videoLightbox');
+      const videoFrame = document.getElementById('videoFrame');
+      const closeVideoLightbox = document.getElementById('closeVideoLightbox');
+
+      // Open video gallery
+      visionsLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        videoGallery.style.display = 'flex';
+      });
+
+      // Close video gallery
+      closeVideoGallery.addEventListener('click', function() {
+        videoGallery.style.display = 'none';
+      });
+
+      // Open video lightbox when clicking on a video thumbnail
+      videoLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          let videoUrl = this.getAttribute('href');
+          videoFrame.src = videoUrl;
+          videoLightbox.style.display = 'flex';
+        });
+      });
+
+      // Close video lightbox
+      closeVideoLightbox.addEventListener('click', function() {
+        videoFrame.src = ''; // Reset src to stop video
+        videoLightbox.style.display = 'none';
+      });
+
+      // =========================
+      // Reviews Side Panel (Whispers)
+      // =========================
+      const whispersLink = document.getElementById('whispersLink');
+      const whispersPanel = document.getElementById('whispersPanel');
+      const closeWhispersPanel = document.getElementById('closeWhispersPanel');
+
+      // Open side panel
+      whispersLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (whispersPanel.classList.contains('open')) {
+          whispersPanel.classList.remove('open');
+        } else {
+          whispersPanel.classList.add('open');
+        }
+      });
+
+      // Close side panel
+      closeWhispersPanel.addEventListener('click', function() {
+        whispersPanel.classList.remove('open');
+      });
+
+
+      // Add keyboard navigation for full-screen photos
+      document.addEventListener("keydown", function(event) {
+          if (photoLightbox.style.display === "flex") {  // Only if lightbox is open
+              if (event.key === "ArrowLeft") {  // Navigate to previous image
+                  let newIndex = currentImageIndex - 1;
+                  if (newIndex < 0) newIndex = galleryLinks.length - 1;
+                  showImage(newIndex);
+              } else if (event.key === "ArrowRight") {  // Navigate to next image
+                  let newIndex = currentImageIndex + 1;
+                  if (newIndex >= galleryLinks.length) newIndex = 0;
+                  showImage(newIndex);
+              } else if (event.key === "Escape") {  // Close lightbox with Escape key
+                  photoLightbox.style.display = 'none';
+              }
+          }
+      });
+
+      // =========================
+      // Mouse Move for Flashlight Effect
+      // =========================
+      document.addEventListener("mousemove", function(e) {
+        let flashlight = document.querySelector(".flashlight");
+        flashlight.style.left = e.clientX + "px";
+        flashlight.style.top = e.clientY + "px";
+
+        let maxDistance = 300; // Maximum distance where opacity is affected
+        let defaultOpacity = 0.3;
+
+        // Update band name letters
+        let bandLetters = document.querySelectorAll(".band-name span");
+        bandLetters.forEach(letter => {
+            let rect = letter.getBoundingClientRect();
+            let letterCenterX = rect.left + rect.width / 2;
+            let letterCenterY = rect.top + rect.height / 2;
+            let distance = Math.hypot(e.clientX - letterCenterX, e.clientY - letterCenterY);
+            let opacityFactor = 1 - Math.min(distance / maxDistance, 1);
+            letter.style.opacity = `${0.1 + (0.9 * opacityFactor)}`;
+        });
+
+    });
+
+
+      window.addEventListener("DOMContentLoaded", function () {
+          setTimeout(() => {
+            const bg = document.querySelector(".background-container");
+
+            // ✅ Ensure the background container has a valid height
+            if (!bg || bg.clientHeight === 0) {
+                console.error("❌ Background container height is invalid! Retrying...");
+                setTimeout(positionGhosts, 200); // Retry after a short delay
+                return;
+            }
+
+        }, 150); // Small delay ensures it's ready
+    });
+
+
+// =========================
+// Escape Key Functionality
+// =========================
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        // Close Video Lightbox if open
+        if (videoLightbox.style.display === "flex") {
+            videoFrame.src = ''; // Stop video playback
+            videoLightbox.style.display = "none";
+            return;
+        }
+
+        // Close Video Gallery if open (unless a video is playing)
+        if (videoGallery.style.display === "flex") {
+            videoGallery.style.display = "none";
+            return;
+        }
+
+        // Close Photo Lightbox if open
+        if (photoLightbox.style.display === "flex") {
+            photoLightbox.style.display = "none";
+            return;
+        }
+
+        // Close Photo Gallery if open (unless a lightbox image is open)
+        if (photoGallery.style.display === "flex") {
+            photoGallery.style.display = "none";
+            return;
+        }
+
+        // Close Side Panel if open
+        if (whispersPanel.classList.contains("open")) {
+            whispersPanel.classList.remove("open");
+            return;
+        }
+    }
+});
+
+
+
+    // =========================
+    // Ghost Background Flicker Effect
+    // =========================
+    const backgrounds = [
+        "images/forestghosts/forestnoghost.png",       // Default no ghosts
+        "images/forestghosts/forestmidleftghost.png",  // Mid Left Ghost
+        "images/forestghosts/forestmidrightghost.png", // Mid Right Ghost
+        "images/forestghosts/forestmiddleghost.png",   // Middle Ghost
+        "images/forestghosts/forestfarleftghost.png",  // Far Left Ghost
+        "images/forestghosts/forestfarrightghost.png"  // Far Right Ghost
+    ];
+
+    const minDelay = 30000;  // Minimum time between ghost appearances (30s)
+    const maxDelay = 90000;  // Maximum time (90s)
+    const minVisibleTime = 2000; // Minimum flicker time 
+    const maxVisibleTime = 3000; // Maximum flicker time 
+
+function showGhostBackground() {
+    let bgImage = document.getElementById("background-image");
+    let randomGhost = Math.floor(Math.random() * (backgrounds.length - 1)) + 1; // Pick a random ghost (1-5)
+
+    const ghostOpacityLevels = {
+        "1": 0.4,  // Mid Left Ghost - Almost fully visible
+        "2": 0.5, // Mid Right Ghost
+        "3": 0.3, // Middle Ghost - Most transparent
+        "4": 0.6, // Far Left Ghost
+        "5": 0.7   // Far Right Ghost - Fully visible
+    };
+
+    function glitchFlicker(times) {
+        if (times === 0) {
+            bgImage.src = backgrounds[0]; // Instantly cut to normal background
+            let nextAppearance = Math.random() * (180000 - 60000) + 60000; // Appearences - ok to edit, lower is more often, this is 60-12-s delay
+            setTimeout(showGhostBackground, nextAppearance);
+            return;
+        }
+
+        // Apply ghost-specific opacity
+        let ghostOpacity = ghostOpacityLevels[randomGhost.toString()] || 1.0; // Default to fully visible if undefined
+        bgImage.src = Math.random() > 0.7 ? backgrounds[randomGhost] : backgrounds[0];
+        bgImage.style.opacity = Math.random() > 0.5 ? ghostOpacity : "0"; // Flicker effect with individual opacity levels
+
+        setTimeout(() => {
+            bgImage.style.opacity = 1; // Reset opacity after flicker
+            glitchFlicker(times - 1);
+        }, Math.random() * (80 - 0.8) + 0.8); // Flicker speed: higher is slower - OK to edit this, was (100 - 10) + 10); - higher is slower
+    }
+
+    glitchFlicker(Math.floor(Math.random() * 100) + 50); // Number of flickers-ok to edit was () * 10) + 6) higher is more
+}
+
+// Start flickering effect after a random delay
+setTimeout(showGhostBackground, Math.random() * (90000 - 30000) + 30000);
+
+
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll(".media-link a").forEach((link, index) => {
+    let duration = (Math.random() * 6 + 3).toFixed(2); // Random duration between 3s - 9s
+    let delay = (Math.random() * 5).toFixed(2); // Random delay between 0s - 5s
+    link.style.animation = `flicker-word ${duration}s infinite ${delay}s`;
+  });
+});
+
+
+      </script>
+  
+    <!-- Fullscreen Lightbox -->
+    <div id="lightbox" class="lightbox">
+      <span id="closeLightbox">&times;</span>
+      <div id="lightboxNavPrev" class="lightbox-nav lightbox-nav-prev">&lt;</div>
+      <div id="lightboxNavNext" class="lightbox-nav lightbox-nav-next">&gt;</div>
+      <img id="lightboxImg" src="" alt="Full-size image">
+    </div>
+
+
+    </body>
+</html>
+
+<!--   ▄▄▄█████▓▄▄▄█████▓  ▄████ 
+       ▓  ██▒ ▓▒▓  ██▒ ▓▒ ██▒ ▀█▒
+       ▒ ▓██░ ▒░▒ ▓██░ ▒░▒██░▄▄▄░
+       ░ ▓██▓ ░ ░ ▓██▓ ░ ░▓█  ██▓
+         ▒██▒ ░   ▒██▒ ░ ░▒▓███▀▒
+         ▒ ░░     ▒ ░░    ░▒   ▒ 
+           ░        ░      ░   ░ 
+         ░        ░      ░ ░   ░ 
+                               ░  -->
