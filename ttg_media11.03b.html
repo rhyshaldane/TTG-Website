@@ -57,9 +57,11 @@
 @keyframes flicker-word {
   0%, 95%, 100% { opacity: 0; text-shadow: none; } /* Fully invisible */
   96% { opacity: 0.3; text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+  97% { opacity: 0; text-shadow: none; }
   98% { opacity: 0.6; text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6); }
   99% { opacity: 0.2; text-shadow: 0 0 5px rgba(255, 255, 255, 0.4); }
 }
+
 
 
 /* Hover Effect - Stronger Glow */
@@ -981,18 +983,22 @@ setTimeout(showGhostBackground, Math.random() * (90000 - 30000) + 30000);
 
 document.addEventListener("DOMContentLoaded", function() {
   document.querySelectorAll(".media-link a").forEach((link, index) => {
-    let duration = (Math.random() * 6 + 3).toFixed(2); // 3s - 9s flicker duration
-    let delay = (Math.random() * 5 + 2).toFixed(2) * 1000; // 2s - 7s delay before starting
+    function triggerFlicker() {
+      let duration = (Math.random() * 3 + 2).toFixed(2); // Flicker duration per burst (2s - 5s)
+      let flickerCount = Math.floor(Math.random() * 5) + 3; // Random flickers (3 - 7 times)
+      let delay = (Math.random() * 8 + 4).toFixed(2) * 1000; // Delay before next cycle (4s - 12s)
 
-    // Ensure opacity is 0 at the start
-    link.style.opacity = "0";
+      link.style.animation = `none`; // Reset animation
+      void link.offsetWidth; // Force reflow to restart animation
+      link.style.animation = `flicker-word ${duration}s ${flickerCount}, heat-distort 1.5s infinite alternate ease-in-out`;
 
-    // Set a timeout to apply the flickering animation after a random delay
-    setTimeout(() => {
-      link.style.animation = `flicker-word ${duration}s infinite, heat-distort 1.5s infinite alternate ease-in-out`;
-    }, delay);
+      setTimeout(triggerFlicker, delay); // Schedule next flicker cycle
+    }
+
+    triggerFlicker(); // Start initial flicker
   });
 });
+
 
 
       </script>
