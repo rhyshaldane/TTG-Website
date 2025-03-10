@@ -904,12 +904,20 @@ document.addEventListener("keydown", function(event) {
 
     const minDelay = 30000;  // Minimum time between ghost appearances (30s)
     const maxDelay = 90000;  // Maximum time (90s)
-    const minVisibleTime = 1800; // Minimum flicker time 
-    const maxVisibleTime = 2500; // Maximum flicker time 
+    const minVisibleTime = 2000; // Minimum flicker time 
+    const maxVisibleTime = 3000; // Maximum flicker time 
 
 function showGhostBackground() {
     let bgImage = document.getElementById("background-image");
     let randomGhost = Math.floor(Math.random() * (backgrounds.length - 1)) + 1; // Pick a random ghost (1-5)
+
+    const ghostOpacityLevels = {
+        "1": 0.4,  // Mid Left Ghost - Almost fully visible
+        "2": 0.5, // Mid Right Ghost
+        "3": 0.3, // Middle Ghost - Most transparent
+        "4": 0.6, // Far Left Ghost
+        "5": 0.7   // Far Right Ghost - Fully visible
+    };
 
     function glitchFlicker(times) {
         if (times === 0) {
@@ -919,17 +927,18 @@ function showGhostBackground() {
             return;
         }
 
-        // Hyper-chaotic flickering effect
-        bgImage.src = Math.random() > 0.7 ? backgrounds[randomGhost] : backgrounds[0]; // More flickers without the ghost visible
-        bgImage.style.opacity = Math.random() > 0.5 ? "0.5" : "0"; // Opacity range-Ok to edit (Max : Min)
+        // Apply ghost-specific opacity
+        let ghostOpacity = ghostOpacityLevels[randomGhost.toString()] || 1.0; // Default to fully visible if undefined
+        bgImage.src = Math.random() > 0.7 ? backgrounds[randomGhost] : backgrounds[0];
+        bgImage.style.opacity = Math.random() > 0.5 ? ghostOpacity : "0"; // Flicker effect with individual opacity levels
 
         setTimeout(() => {
             bgImage.style.opacity = 1; // Reset opacity after flicker
             glitchFlicker(times - 1);
-        }, Math.random() * (300 - 50) + 50); // Flicker speed: higher is slower - OK to edit this, was (100 - 10) + 10); - higher is slower
+        }, Math.random() * (80 - 0.8) + 0.8); // Flicker speed: higher is slower - OK to edit this, was (100 - 10) + 10); - higher is slower
     }
 
-    glitchFlicker(Math.floor(Math.random() * 160) + 80); // Number of flickers-ok to edit was () * 10) + 6) higher is more
+    glitchFlicker(Math.floor(Math.random() * 100) + 50); // Number of flickers-ok to edit was () * 10) + 6) higher is more
 }
 
 // Start flickering effect after a random delay
