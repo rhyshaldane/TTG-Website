@@ -36,15 +36,6 @@
       cursor: none; /* Hide the default cursor */
     }
 
-    /* Ghost image styles for the glitch effect */
-    #ghost, #ghost_02, #ghost_03, #ghost_04, #ghost_05 {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 1;
-      transition: opacity 0.2s ease-in-out;
-      border: 2px solid red; /* for testing, delete this line */
-    }
 
     /* Glitch animations for ghost flicker effects */
     @keyframes glitch-flicker {
@@ -547,12 +538,7 @@
 
   <!-- Ghost images for glitch effect -->
   <div class="background-container">
-    <img src="images/forest01b.jpg" alt="Forest Background">
-    <img id="ghost" src="images/ghost 02cb.png" alt="Left ghostly figure">
-    <img id="ghost_02" src="images/ghost 02da.png" alt="Right ghostly figure">
-    <img id="ghost_03" src="images/ghost 03b.png" alt="Middle ghostly figure">
-    <img id="ghost_04" src="images/ghost 02cb.png" alt="Left Edge Ghostly figure">
-    <img id="ghost_05" src="images/ghost 02da.png" alt="Right Edge Ghostly figure">
+    <img id="background-image" src="images/forestghosts/forestnoghost.png" alt="Forest Background">
   </div>
 
   <!-- Flashlight element that follows the mouse -->
@@ -909,7 +895,7 @@
         });
     });
 
-      window.addEventListener("load", function () {
+      window.addEventListener("DOMContentLoaded", function () {
           setTimeout(() => {
             const bg = document.querySelector(".background-container");
 
@@ -920,155 +906,69 @@
                 return;
             }
 
-            console.log("✅ Background container is ready. Running positionGhosts()");
-            positionGhosts(); // Now safe to run!
         }, 150); // Small delay ensures it's ready
     });
 
-    // this whole thing positions all the ghosts, its a nightmare
-function positionGhosts() {
-    const bg = document.querySelector(".background-container img");
-    if (!bg) return;
 
-    // Get actual background image size
-    const bgRect = bg.getBoundingClientRect();
-    const bgWidth = bgRect.width;
-    const bgHeight = bgRect.height;
-
-    console.log(`Background size: ${bgWidth} x ${bgHeight}`);
-
-    // Get scale factors relative to original size
-    let scaleX = bgWidth / 1163;  // Base width from your reference
-    let scaleY = bgHeight / 638;  // Base height from your reference
-    let scale = Math.min(scaleX, scaleY); // Preserve aspect ratio
-
-    console.log(`Scale factor: ${scale}`);
-
-    const ghosts = [
-        { id: "ghost", top: 0.54, left: 0.35, width: 0.31 }, // Mid Left
-        { id: "ghost_02", top: 0.61, left: 0.62, width: 0.25 },  // Mid Right
-        { id: "ghost_03", top: 0.71, left: 0.48, width: 0.12 }, // Middle ghost
-        { id: "ghost_04", top: 0.06, left: 0.99, width: 1.0 },  // Far Right
-        { id: "ghost_05", top: 0.04, left: 0.00, width: 1.2 }  
-    ];
-
-    ghosts.forEach(ghost => {
-        let element = document.getElementById(ghost.id);
-        if (element) {
-            let adjustedTop = bgRect.top + (bgHeight * ghost.top);
-            let adjustedLeft = bgRect.left + (bgWidth * ghost.left);
-
-            element.style.top = `${adjustedTop}px`;
-            element.style.left = `${adjustedLeft}px`;
-            element.style.width = `${(bgWidth * ghost.width)}px`; // Scale width based on bg image
-            element.style.height = "auto";
+// =========================
+// Escape Key Functionality
+// =========================
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        // Close Video Lightbox if open
+        if (videoLightbox.style.display === "flex") {
+            videoFrame.src = ''; // Stop video playback
+            videoLightbox.style.display = "none";
+            return;
         }
-    });
-}
 
+        // Close Video Gallery if open (unless a video is playing)
+        if (videoGallery.style.display === "flex") {
+            videoGallery.style.display = "none";
+            return;
+        }
 
+        // Close Photo Lightbox if open
+        if (photoLightbox.style.display === "flex") {
+            photoLightbox.style.display = "none";
+            return;
+        }
 
-let resizeTimer; // Store timeout reference
+        // Close Photo Gallery if open (unless a lightbox image is open)
+        if (photoGallery.style.display === "flex") {
+            photoGallery.style.display = "none";
+            return;
+        }
 
-window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer); // Prevent multiple rapid calls
-    resizeTimer = setTimeout(() => {
-        console.log("Window resized - updating ghost positions...");
-        positionGhosts();
-    }, 0); // Short delay ensures correct background size
+        // Close Side Panel if open
+        if (whispersPanel.classList.contains("open")) {
+            whispersPanel.classList.remove("open");
+            return;
+        }
+    }
 });
 
+document.addEventListener("mousemove", function(e) {
+    let maxDistance = 250; // Maximum distance for effect
+    let links = document.querySelectorAll(".media-bar a");
 
+    links.forEach(link => {
+        let rect = link.getBoundingClientRect();
+        let linkCenterX = rect.left + rect.width / 2;
+        let linkCenterY = rect.top + rect.height / 2;
+        let distance = Math.hypot(e.clientX - linkCenterX, e.clientY - linkCenterY);
 
+        link.classList.remove("flicker-low", "flicker-medium", "flicker-high");
 
-    // =========================
-    // Ghost Flicker Functionality
-    // =========================
-    function showGhost(ghostId) {
-        let ghost = document.getElementById(ghostId);
-        let visibleDuration = Math.random() * (2500 - 1200) + 1200;
-        ghost.style.animation = "glitch-flicker 0.15s infinite alternate, glitch-slices 0.12s infinite alternate";
-        ghost.style.opacity = "0.8"; 
-        
-        setTimeout(() => {
-            ghost.style.opacity = "0.6";
-            setTimeout(() => {
-                ghost.style.opacity = "0";
-                ghost.style.animation = "";
-                let nextAppearance = Math.random() * (180000 - 60000) + 60000; // Normal ghosts 1-3 min
-                setTimeout(() => showGhost(ghostId), nextAppearance);
-            }, 200);
-        }, visibleDuration);
-    }
-
-
-      // Initiate ghost effects with random initial delays
-      setTimeout(() => showGhost("ghost"), Math.random() * (30000 - 10000) + 10000); // Left ghost
-      setTimeout(() => showGhost("ghost_02"), Math.random() * (35000 - 12000) + 12000); // Right ghost
-      setTimeout(() => showGhost("ghost_03"), Math.random() * (90000 - 4000) + 40000); // Middle ghost
-      setTimeout(() => showGhost("ghost_04"), Math.random() * (70000 - 30000) + 30000); // Left edge ghost
-      setTimeout(() => showGhost("ghost_05"), Math.random() * (110000 - 50000) + 50000); // Right edge ghost
-
-
-        // =========================
-        // Escape Key Functionality
-        // =========================
-        document.addEventListener("keydown", function(event) {
-            if (event.key === "Escape") {
-                // Close Video Lightbox if open
-                if (videoLightbox.style.display === "flex") {
-                    videoFrame.src = ''; // Stop video playback
-                    videoLightbox.style.display = "none";
-                    return;
-                }
-
-                // Close Video Gallery if open (unless a video is playing)
-                if (videoGallery.style.display === "flex") {
-                    videoGallery.style.display = "none";
-                    return;
-                }
-
-                // Close Photo Lightbox if open
-                if (photoLightbox.style.display === "flex") {
-                    photoLightbox.style.display = "none";
-                    return;
-                }
-
-                // Close Photo Gallery if open (unless a lightbox image is open)
-                if (photoGallery.style.display === "flex") {
-                    photoGallery.style.display = "none";
-                    return;
-                }
-
-                // Close Side Panel if open
-                if (whispersPanel.classList.contains("open")) {
-                    whispersPanel.classList.remove("open");
-                    return;
-                }
-            }
-        });
-
-        document.addEventListener("mousemove", function(e) {
-          let maxDistance = 250; // Maximum distance for effect
-          let links = document.querySelectorAll(".media-bar a");
-
-          links.forEach(link => {
-              let rect = link.getBoundingClientRect();
-              let linkCenterX = rect.left + rect.width / 2;
-              let linkCenterY = rect.top + rect.height / 2;
-              let distance = Math.hypot(e.clientX - linkCenterX, e.clientY - linkCenterY);
-
-              link.classList.remove("flicker-low", "flicker-medium", "flicker-high");
-
-              if (distance < maxDistance * 0.3) {
-                  link.classList.add("flicker-high"); // Intense flicker when very close
-              } else if (distance < maxDistance * 0.6) {
-                  link.classList.add("flicker-medium"); // Medium flicker at mid-range
-              } else if (distance < maxDistance) {
-                  link.classList.add("flicker-low"); // Subtle flicker when nearby
-              }
-          });
-      });
+        if (distance < maxDistance * 0.3) {
+            link.classList.add("flicker-high"); // Intense flicker when very close
+        } else if (distance < maxDistance * 0.6) {
+            link.classList.add("flicker-medium"); // Medium flicker at mid-range
+        } else if (distance < maxDistance) {
+            link.classList.add("flicker-low"); // Subtle flicker when nearby
+        }
+    });
+});
 
       function randomFlicker() {
         let links = document.querySelectorAll(".media-bar a");
@@ -1104,15 +1004,40 @@ window.addEventListener("resize", () => {
     }
 
 
-      // Start random flickering on page load (blends with cursor proximity flicker)
-      document.addEventListener("DOMContentLoaded", randomFlicker);
+    // =========================
+    // Ghost Background Flicker Effect
+    // =========================
+    const backgrounds = [
+        "images/forestghosts/forestnoghost.png",       // Default no ghosts
+        "images/forestghosts/forestmidleftghost.png",  // Mid Left Ghost
+        "images/forestghosts/forestmidrightghost.png", // Mid Right Ghost
+        "images/forestghosts/forestmiddleghost.png",   // Middle Ghost
+        "images/forestghosts/forestfarleftghost.png",  // Far Left Ghost
+        "images/forestghosts/forestfarrightghost.png"  // Far Right Ghost
+    ];
 
+    const minDelay = 30000;  // Minimum time between ghost appearances (30s)
+    const maxDelay = 90000;  // Maximum time (90s)
+    const minVisibleTime = 1200; // Minimum flicker time (1.2s)
+    const maxVisibleTime = 2500; // Maximum flicker time (2.5s)
 
+    function showGhostBackground() {
+        let randomGhost = Math.floor(Math.random() * (backgrounds.length - 1)) + 1; // Pick a random ghost (1-5)
+        const bgImage = document.getElementById("background-image");
+        bgImage.src = backgrounds[randomGhost];
 
-    });
+        let visibleTime = Math.random() * (maxVisibleTime - minVisibleTime) + minVisibleTime;
 
-window.addEventListener("load", function () {
-    console.log("Initial window size:", window.innerWidth, "x", window.innerHeight);
+        setTimeout(() => {
+            bgImage.src = backgrounds[0]; // Reset to normal background
+            let nextAppearance = Math.random() * (maxDelay - minDelay) + minDelay; // Random delay before next ghost
+            setTimeout(showGhostBackground, nextAppearance);
+        }, visibleTime);
+    }
+
+    // Start the flickering effect after a random delay
+    setTimeout(showGhostBackground, Math.random() * (maxDelay - minDelay) + minDelay);
+
 });
 
 
