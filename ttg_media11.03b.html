@@ -681,7 +681,46 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+
+function showGhostBackground() {
+        let bgImage = document.getElementById("background-image");
+        let randomGhost = Math.floor(Math.random() * (backgrounds.length - 1)) + 1; // Pick a random ghost (1-5)
+
+    const ghostOpacityLevels = {
+        "1": 0.4,  // Mid Left Ghost - Almost fully visible
+        "2": 0.5, // Mid Right Ghost
+        "3": 0.3, // Middle Ghost - Most transparent
+        "4": 0.6, // Far Left Ghost
+        "5": 0.7   // Far Right Ghost - Fully visible
+    };
+
+    function glitchFlicker(times) {
+        if (times === 0) {
+            bgImage.src = backgrounds[0]; // Instantly cut to normal background
+            let nextAppearance = Math.random() * (180000 - 60000) + 60000; // Appearences - ok to edit, lower is more often, this is 60-12-s delay
+            setTimeout(showGhostBackground, nextAppearance);
+            return;
+        }
+
+        // Apply ghost-specific opacity
+        let ghostOpacity = ghostOpacityLevels[randomGhost.toString()] || 1.0; // Default to fully visible if undefined
+        bgImage.src = Math.random() > 0.7 
+            ? backgrounds[randomGhost] + "?nocache=" + new Date().getTime()
+            : backgrounds[0];
+        bgImage.style.opacity = Math.random() > 0.5 ? ghostOpacity : "0"; // Flicker effect with individual opacity levels
+
+        setTimeout(() => {
+            bgImage.style.opacity = 1; // Reset opacity after flicker
+            glitchFlicker(times - 1);
+        }, Math.random() * (80 - 0.8) + 0.8); // Flicker speed: higher is slower - OK to edit this, was (100 - 10) + 10); - higher is slower
+    }
+
+    glitchFlicker(Math.floor(Math.random() * 100) + 50); // Number of flickers-ok to edit was () * 10) + 6) higher is more
+}
+
+// Start flickering effect after a random delay
+setTimeout(showGhostBackground, Math.random() * (maxDelay - minDelay) + minDelay);
+
       // =========================
       // Band Name Animation
       // =========================
@@ -698,6 +737,21 @@
         bandName.appendChild(span);
       });
 
+      document.querySelectorAll(".media-link a").forEach((link, index) => {
+        function triggerFlicker() {
+          let duration = (Math.random() * 3 + 2).toFixed(2); // Flicker duration per burst (2s - 5s)
+          let flickerCount = Math.floor(Math.random() * 5) + 3; // Random flickers (3 - 7 times)
+          let delay = (Math.random() * 8 + 4).toFixed(2) * 1000; // Delay before next cycle (4s - 12s)
+
+          link.style.animation = `none`; // Reset animation
+          void link.offsetWidth; // Force reflow to restart animation
+          link.style.animation = `flicker-word ${duration}s ${flickerCount}, heat-distort 1.5s infinite alternate ease-in-out`;
+
+          setTimeout(triggerFlicker, delay); // Schedule next flicker cycle
+        }
+
+        triggerFlicker(); // Start initial flicker
+      });
 
       // =========================
       // Photo Gallery (Echoes)
@@ -857,8 +911,7 @@
             let opacityFactor = 1 - Math.min(distance / maxDistance, 1);
             letter.style.opacity = `${0.1 + (0.9 * opacityFactor)}`;
         });
-
-    });
+      });
 
 
       window.addEventListener("DOMContentLoaded", function () {
@@ -928,68 +981,16 @@ document.addEventListener("keydown", function(event) {
         "https://raw.githubusercontent.com/rhyshaldane/TTG-Website/refs/heads/main/forestfarrightghost.png"  // Far Right Ghost
     ];
 
-    const minDelay = 30000;  // Minimum time between ghost appearances (30s)
-    const maxDelay = 90000;  // Maximum time (90s)
+    const minDelay = 30000;  // Minimum time between ghost appearances (30s = 30000)
+    const maxDelay = 90000;  // Maximum time (90s = 90000) - set to 1 and 2 for testing
     const minVisibleTime = 2000; // Minimum flicker time 
     const maxVisibleTime = 3000; // Maximum flicker time 
 
-function showGhostBackground() {
-    let bgImage = document.getElementById("background-image");
-    let randomGhost = Math.floor(Math.random() * (backgrounds.length - 1)) + 1; // Pick a random ghost (1-5)
-
-    const ghostOpacityLevels = {
-        "1": 0.4,  // Mid Left Ghost - Almost fully visible
-        "2": 0.5, // Mid Right Ghost
-        "3": 0.3, // Middle Ghost - Most transparent
-        "4": 0.6, // Far Left Ghost
-        "5": 0.7   // Far Right Ghost - Fully visible
-    };
-
-    function glitchFlicker(times) {
-        if (times === 0) {
-            bgImage.src = backgrounds[0]; // Instantly cut to normal background
-            let nextAppearance = Math.random() * (180000 - 60000) + 60000; // Appearences - ok to edit, lower is more often, this is 60-12-s delay
-            setTimeout(showGhostBackground, nextAppearance);
-            return;
-        }
-
-        // Apply ghost-specific opacity
-        let ghostOpacity = ghostOpacityLevels[randomGhost.toString()] || 1.0; // Default to fully visible if undefined
-        bgImage.src = Math.random() > 0.7 ? backgrounds[randomGhost] : backgrounds[0];
-        bgImage.style.opacity = Math.random() > 0.5 ? ghostOpacity : "0"; // Flicker effect with individual opacity levels
-
-        setTimeout(() => {
-            bgImage.style.opacity = 1; // Reset opacity after flicker
-            glitchFlicker(times - 1);
-        }, Math.random() * (80 - 0.8) + 0.8); // Flicker speed: higher is slower - OK to edit this, was (100 - 10) + 10); - higher is slower
-    }
-
-    glitchFlicker(Math.floor(Math.random() * 100) + 50); // Number of flickers-ok to edit was () * 10) + 6) higher is more
-}
-
-// Start flickering effect after a random delay
-setTimeout(showGhostBackground, Math.random() * (90000 - 30000) + 30000);
+    
 
 
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-  document.querySelectorAll(".media-link a").forEach((link, index) => {
-    function triggerFlicker() {
-      let duration = (Math.random() * 3 + 2).toFixed(2); // Flicker duration per burst (2s - 5s)
-      let flickerCount = Math.floor(Math.random() * 5) + 3; // Random flickers (3 - 7 times)
-      let delay = (Math.random() * 8 + 4).toFixed(2) * 1000; // Delay before next cycle (4s - 12s)
-
-      link.style.animation = `none`; // Reset animation
-      void link.offsetWidth; // Force reflow to restart animation
-      link.style.animation = `flicker-word ${duration}s ${flickerCount}, heat-distort 1.5s infinite alternate ease-in-out`;
-
-      setTimeout(triggerFlicker, delay); // Schedule next flicker cycle
-    }
-
-    triggerFlicker(); // Start initial flicker
-  });
-});
 
 
 
