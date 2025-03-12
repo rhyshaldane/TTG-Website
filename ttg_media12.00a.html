@@ -187,12 +187,6 @@
   display: none;
 }
 
-@keyframes glow-pulse {
-  0% { opacity: 0.2; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(1.05); }
-  100% { opacity: 0.2; transform: scale(1); }
-}
-
 
     /* Bottom navigation bar styling */
     .bottom-nav {
@@ -244,21 +238,6 @@
       100% { transform: translate(-50%, -50%) translateX(-5px) translateY(3px); }
     }
 
-
-    /* Static screen overlay */
-    .static-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: none;
-      background-size: cover;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      z-index: 9999;
-    }
 
     /* Photo Gallery Styles */
     .gallery-container {
@@ -593,15 +572,15 @@
       </div>
       <!-- About Section: Origins -->
       <div class="media-link">
-        <a href="#placeholder" id="summonLink">Origins</a>
+        <a href="#placeholder" id="originsLink">Origins</a>
       </div>
       <!-- Contact Page, leave a message: Manifest -->
       <div class="media-link">
-        <a href="#placeholder" id="summonLink">Manifest</a>
+        <a href="#placeholder" id="manifestLink">Manifest</a>
       </div>
       <!-- Links, friends, etc: Shadows -->
       <div class="media-link">
-        <a href="#placeholder" id="summonLink">Shadows</a>
+        <a href="#placeholder" id="shadowsLink">Shadows</a>
       </div>
     </div>
   </div>
@@ -617,8 +596,6 @@
     </div>
     <div>© 2025 Through the Gloom. All content produced by Through the Gloom. Additional elements produced by Utopian Mechanics.</div>
   </div>
-
-  <div class="static-screen" id="staticScreen"></div>
 
   <!-- Photo Gallery (Echoes) -->
   <div class="gallery-container" id="photoGallery">
@@ -645,8 +622,8 @@
   <!-- Fullscreen Photo Lightbox -->
   <div id="photoLightbox" class="lightbox">
     <span class="close-button echoes" id="closePhotoLightbox">&times;</span>
-    <div id="lightboxNavPrev" class="lightbox-nav lightbox-nav-prev">&lt;</div>
-    <div id="lightboxNavNext" class="lightbox-nav lightbox-nav-next">&gt;</div>
+    <div id="photoLightboxNavPrev" class="lightbox-nav lightbox-nav-prev">&lt;</div>
+    <div id="photoLightboxNavNext" class="lightbox-nav lightbox-nav-next">&gt;</div>    
     <img id="lightboxImg" src="" alt="Full-size image">
   </div>
 
@@ -668,8 +645,8 @@
             <img src="https://img.youtube.com/vi/IBmCN9wV-74/0.jpg" alt="Nostromos Teaser">
           </a>
           <p class="video-title">Nostromos Reckoning Teaser</p>
+        </div>  
     </div>
-
   </div>
 
   <!-- Video Lightbox -->
@@ -732,8 +709,8 @@ document.addEventListener("DOMContentLoaded", function() {
   const photoLightbox = document.getElementById('photoLightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const closePhotoLightbox = document.getElementById('closePhotoLightbox');
-  const lightboxNavPrev = document.getElementById('lightboxNavPrev');
-  const lightboxNavNext = document.getElementById('lightboxNavNext');
+  const lightboxNavPrev = document.getElementById('photoLightboxNavPrev');
+  const lightboxNavNext = document.getElementById('photoLightboxNavNext');
   let currentImageIndex = 0;
   const galleryLinks = document.querySelectorAll(".gallery a");
 
@@ -775,6 +752,21 @@ document.addEventListener("DOMContentLoaded", function() {
     if (newIndex >= galleryLinks.length) newIndex = 0;
     showImage(newIndex);
   });
+
+  document.addEventListener("keydown", function(event) {
+    if (photoLightbox.style.display === "flex") {
+        if (event.key === "ArrowLeft") {
+            let newIndex = currentImageIndex - 1;
+            if (newIndex < 0) newIndex = galleryLinks.length - 1;
+            showImage(newIndex);
+        } else if (event.key === "ArrowRight") {
+            let newIndex = currentImageIndex + 1;
+            if (newIndex >= galleryLinks.length) newIndex = 0;
+            showImage(newIndex);
+        }
+    }
+});
+
 
   closeElementOnEscape(photoLightbox, () => toggleDisplay(photoLightbox, 'none'));
   closeElementOnEscape(photoGallery, () => toggleDisplay(photoGallery, 'none'));
@@ -835,7 +827,12 @@ document.addEventListener("DOMContentLoaded", function() {
     whispersPanel.classList.remove('open');
   });
 
-  closeElementOnEscape(whispersPanel, () => whispersPanel.classList.remove('open'));
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape" && whispersPanel.classList.contains("open")) {
+        whispersPanel.classList.remove("open");
+    }
+});
+
 
   // =========================
   // Mouse Move for Flashlight Effect
@@ -877,6 +874,14 @@ document.addEventListener("DOMContentLoaded", function() {
   const minVisibleTime = 2000; // Minimum flicker time 
   const maxVisibleTime = 3000; // Maximum flicker time 
 
+  const ghostOpacityLevels = {
+      "1": 0.4,  // Mid Left Ghost - Almost fully visible
+      "2": 0.5, // Mid Right Ghost
+      "3": 0.3, // Middle Ghost - Most transparent
+      "4": 0.6, // Far Left Ghost
+      "5": 0.7   // Far Right Ghost - Fully visible
+    };
+
   function showGhostBackground() {
     console.log("showGhostBackground called");
     let bgImage = document.getElementById("background-image");
@@ -894,7 +899,7 @@ document.addEventListener("DOMContentLoaded", function() {
       "3": 0.3, // Middle Ghost - Most transparent
       "4": 0.6, // Far Left Ghost
       "5": 0.7   // Far Right Ghost - Fully visible
-  };
+    };
 
   function glitchFlicker(times) {
       if (times === 0) {
@@ -947,16 +952,6 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
-
-
-
-    <!-- Fullscreen Lightbox -->
-    <div id="lightbox" class="lightbox">
-      <span id="closeLightbox">&times;</span>
-      <div id="lightboxNavPrev" class="lightbox-nav lightbox-nav-prev">&lt;</div>
-      <div id="lightboxNavNext" class="lightbox-nav lightbox-nav-next">&gt;</div>
-      <img id="lightboxImg" src="" alt="Full-size image">
-    </div>
 
 
     </body>
